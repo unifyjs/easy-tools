@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Heart, Copy, RotateCcw, Info } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
-const TextDedup = () => {
+const TextDedup: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [inputSeparator, setInputSeparator] = useState('newline');
   const [outputSeparator, setOutputSeparator] = useState('newline');
   const [likes, setLikes] = useState(2139);
   const [isLiked, setIsLiked] = useState(false);
-  const { toast } = useToast();
 
   const separatorMap: { [key: string]: string } = {
     'newline': '\n',
@@ -29,323 +27,212 @@ const TextDedup = () => {
     'array': "','"
   };
 
-  const separatorNames: { [key: string]: string } = {
-    'newline': '换行[↵]',
-    'space': '空格[ ]',
-    'comma': '逗号[,]',
-    'comma-cn': '中文逗号[，]',
-    'slash': '斜杠[/]',
-    'semicolon': '分号[;]',
-    'semicolon-cn': '中文分号[；]',
-    'dot': '圆点[.]',
-    'none': '无分隔',
-    'array': "'项目',"
-  };
-
   const deduplicateText = () => {
     if (!inputText.trim()) {
-      toast({
-        title: "提示",
-        description: "请输入要去重的文本",
-        variant: "destructive",
-      });
+      toast.error('请输入要处理的文本');
       return;
     }
 
-    const separator = separatorMap[inputSeparator];
-    const items = inputText.split(separator).map(item => item.trim()).filter(item => item);
-    
-    // 去重
+    const sep = separatorMap[inputSeparator];
+    const items = inputText.split(sep).filter(item => item.trim() !== '');
     const uniqueItems = [...new Set(items)];
-    
-    // 根据输出分隔符格式化
-    let result = '';
     const outputSep = separatorMap[outputSeparator];
-    
-    if (outputSeparator === 'array') {
-      result = uniqueItems.map(item => `'${item}',`).join('\n');
-    } else if (outputSeparator === 'none') {
-      result = uniqueItems.join('');
-    } else {
-      result = uniqueItems.join(outputSep);
-    }
+    const result = uniqueItems.join(outputSep);
     
     setOutputText(result);
-    
-    toast({
-      title: "去重完成",
-      description: `原有 ${items.length} 项，去重后 ${uniqueItems.length} 项`,
-    });
+    toast.success(`去重完成，共处理 ${items.length} 项，去重后剩余 ${uniqueItems.length} 项`);
   };
 
-  const changeSeparatorOnly = () => {
-    if (!inputText.trim()) {
-      toast({
-        title: "提示",
-        description: "请输入要处理的文本",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const separator = separatorMap[inputSeparator];
-    const items = inputText.split(separator).map(item => item.trim()).filter(item => item);
-    
-    // 仅修改分隔符，不去重
-    let result = '';
-    const outputSep = separatorMap[outputSeparator];
-    
-    if (outputSeparator === 'array') {
-      result = items.map(item => `'${item}',`).join('\n');
-    } else if (outputSeparator === 'none') {
-      result = items.join('');
-    } else {
-      result = items.join(outputSep);
-    }
-    
-    setOutputText(result);
-    
-    toast({
-      title: "分隔符修改完成",
-      description: `共处理 ${items.length} 项`,
-    });
-  };
-
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(text);
-      toast({
-        title: "复制成功",
-        description: "内容已复制到剪贴板",
-      });
+      await navigator.clipboard.writeText(outputText);
+      toast.success('已复制到剪贴板');
     } catch (err) {
-      toast({
-        title: "复制失败",
-        description: "请手动复制内容",
-        variant: "destructive",
-      });
+      toast.error('复制失败，请手动复制');
     }
   };
 
   const clearAll = () => {
     setInputText('');
     setOutputText('');
+    toast.success('内容已清空');
   };
 
   const handleLike = () => {
     if (!isLiked) {
       setLikes(likes + 1);
       setIsLiked(true);
-      toast({
-        title: "点赞成功",
-        description: "感谢您的支持！",
-      });
+      toast.success('感谢您的点赞！');
+    } else {
+      setLikes(likes - 1);
+      setIsLiked(false);
+      toast.success('已取消点赞');
     }
   };
 
   return (
-    <Layout currentTool="文本去重分隔工具">
-      <div className="p-6 max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">文本去重分隔工具</h1>
-          <p className="text-gray-600">去除重复文本并自定义分隔符，适用于SEO关键词去重等场景</p>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* 工具标题和统计 */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center float-animation">
+            <span className="text-2xl">🔄</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold category-title">文本去重分隔工具</h1>
+            <p className="text-muted-foreground">去除重复文本并按指定分隔符分隔</p>
+          </div>
         </div>
-
-        {/* 分隔符设置 */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">分隔符设置</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  输入分隔符
-                </label>
-                <Select value={inputSeparator} onValueChange={setInputSeparator}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(separatorNames).slice(0, 7).map(([key, name]) => (
-                      <SelectItem key={key} value={key}>{name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  输出分隔符
-                </label>
-                <Select value={outputSeparator} onValueChange={setOutputSeparator}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(separatorNames).map(([key, name]) => (
-                      <SelectItem key={key} value={key}>{name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 输入区域 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">输入文本</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder={`请输入要处理的文本，使用${separatorNames[inputSeparator]}分隔...`}
-                className="min-h-[300px] resize-none"
-              />
-              <div className="mt-4 text-sm text-gray-500">
-                当前分隔符：{separatorNames[inputSeparator]}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 输出区域 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">处理结果</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={outputText}
-                readOnly
-                placeholder="处理结果将显示在这里..."
-                className="min-h-[300px] resize-none bg-gray-50"
-              />
-              <div className="mt-4 flex space-x-2">
-                <Button 
-                  onClick={() => copyToClipboard(outputText)}
-                  disabled={!outputText}
-                  size="sm"
-                >
-                  <Copy className="w-4 h-4 mr-2" />
-                  复制结果
-                </Button>
-                <Button 
-                  onClick={clearAll}
-                  variant="outline"
-                  size="sm"
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  清空
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 操作按钮 */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-lg">操作</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-3">
-              <Button 
-                onClick={deduplicateText}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                文本去重
-              </Button>
-              <Button 
-                onClick={changeSeparatorOnly}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                仅修改分隔符
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 使用说明 */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <Info className="w-5 h-5 mr-2" />
-              使用说明
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 text-sm text-gray-600">
-              <div>
-                <strong>文本去重：</strong>去除重复的文本项目，保留唯一值
-              </div>
-              <div>
-                <strong>仅修改分隔符：</strong>不去重，只改变文本项目之间的分隔符
-              </div>
-              <div>
-                <strong>输入分隔符：</strong>指定原文本中项目之间的分隔符
-              </div>
-              <div>
-                <strong>输出分隔符：</strong>指定处理后文本中项目之间的分隔符
-              </div>
-              <div>
-                <strong>数组格式：</strong>输出格式为 'item1', 'item2', 适用于编程场景
-              </div>
-              <div>
-                <strong>应用场景：</strong>SEO关键词去重、数据清理、列表处理等
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 示例 */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-lg">示例</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4 text-sm">
-              <div>
-                <div className="font-medium text-gray-700 mb-1">输入示例（换行分隔）：</div>
-                <div className="bg-gray-100 p-2 rounded font-mono">
-                  苹果<br/>
-                  香蕉<br/>
-                  苹果<br/>
-                  橙子<br/>
-                  香蕉
-                </div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700 mb-1">输出示例（逗号分隔，已去重）：</div>
-                <div className="bg-gray-100 p-2 rounded font-mono">
-                  苹果,香蕉,橙子
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 点赞和收藏 */}
-        <div className="mt-6 flex justify-center space-x-4">
-          <Button 
-            onClick={handleLike}
-            variant={isLiked ? "default" : "outline"}
-            className={isLiked ? "bg-red-500 hover:bg-red-600" : ""}
-          >
-            <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current' : ''}`} />
-            点赞 ({likes.toLocaleString()})
-          </Button>
-          <Button variant="outline">
-            <Copy className="w-4 h-4 mr-2" />
-            收藏
-          </Button>
+        
+        <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <span>2139次使用</span>
+          </div>
         </div>
       </div>
-    </Layout>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 输入区域 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">输入文本</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="请输入要处理的文本内容..."
+              className="min-h-[400px] resize-none"
+            />
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">输入分隔符</label>
+                <Select value={inputSeparator} onValueChange={setInputSeparator}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择分隔符" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newline">换行符</SelectItem>
+                    <SelectItem value="space">空格</SelectItem>
+                    <SelectItem value="comma">英文逗号</SelectItem>
+                    <SelectItem value="comma-cn">中文逗号</SelectItem>
+                    <SelectItem value="slash">斜杠</SelectItem>
+                    <SelectItem value="semicolon">英文分号</SelectItem>
+                    <SelectItem value="semicolon-cn">中文分号</SelectItem>
+                    <SelectItem value="dot">英文句号</SelectItem>
+                    <SelectItem value="none">无分隔符</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">输出分隔符</label>
+                <Select value={outputSeparator} onValueChange={setOutputSeparator}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择分隔符" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newline">换行符</SelectItem>
+                    <SelectItem value="space">空格</SelectItem>
+                    <SelectItem value="comma">英文逗号</SelectItem>
+                    <SelectItem value="comma-cn">中文逗号</SelectItem>
+                    <SelectItem value="slash">斜杠</SelectItem>
+                    <SelectItem value="semicolon">英文分号</SelectItem>
+                    <SelectItem value="semicolon-cn">中文分号</SelectItem>
+                    <SelectItem value="dot">英文句号</SelectItem>
+                    <SelectItem value="none">无分隔符</SelectItem>
+                    <SelectItem value="array">数组格式</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button onClick={deduplicateText} disabled={!inputText.trim()}>
+                去重处理
+              </Button>
+              <Button onClick={clearAll} variant="outline">
+                <RotateCcw className="w-4 h-4 mr-2" />
+                清空
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 输出区域 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">处理结果</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              value={outputText}
+              readOnly
+              placeholder="处理结果将显示在这里..."
+              className="min-h-[400px] resize-none bg-secondary/50"
+            />
+            
+            <div className="flex gap-2">
+              <Button onClick={copyToClipboard} disabled={!outputText} className="flex-1">
+                <Copy className="w-4 h-4 mr-2" />
+                复制结果
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 使用说明 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="w-5 h-5" />
+            使用说明
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-medium mb-2">功能特点</h4>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• <strong>去重功能:</strong> 自动去除重复的文本行</li>
+                <li>• <strong>分隔符支持:</strong> 支持多种常见分隔符</li>
+                <li>• <strong>保留顺序:</strong> 保留原始文本的顺序</li>
+                <li>• <strong>批量处理:</strong> 一次处理大量文本</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2">使用场景</h4>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• <strong>数据清洗:</strong> 清理重复的数据记录</li>
+                <li>• <strong>关键词整理:</strong> 去除重复的关键词</li>
+                <li>• <strong>名单去重:</strong> 整理重复的名单列表</li>
+                <li>• <strong>URL去重:</strong> 清理重复的链接列表</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+            <p className="text-sm text-muted-foreground">
+              💡 <strong>小贴士:</strong> 支持自定义分隔符，可以处理各种格式的文本数据。处理结果可以直接复制使用。
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 操作按钮 */}
+      <div className="flex justify-center">
+        <Button 
+          onClick={handleLike}
+          variant={isLiked ? "default" : "outline"}
+          className={isLiked ? "text-red-500 border-red-200" : ""}
+        >
+          <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current' : ''}`} />
+          {isLiked ? '已点赞' : '点赞'} ({likes.toLocaleString()})
+        </Button>
+      </div>
+    </div>
   );
 };
 

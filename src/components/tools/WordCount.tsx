@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Heart, Copy, RotateCcw, Info } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface WordCountStats {
   totalWords: number;
@@ -18,7 +17,7 @@ interface WordCountStats {
   numbers: number;
 }
 
-const WordCount = () => {
+const WordCount: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [stats, setStats] = useState<WordCountStats>({
     totalWords: 0,
@@ -33,7 +32,6 @@ const WordCount = () => {
   });
   const [likes, setLikes] = useState(2638);
   const [isLiked, setIsLiked] = useState(false);
-  const { toast } = useToast();
 
   const calculateStats = (text: string): WordCountStats => {
     if (!text) {
@@ -77,7 +75,7 @@ const WordCount = () => {
     const englishWords = (text.match(/\b[a-zA-Z]+\b/g) || []).length;
     
     // 英文符号
-    const englishSymbols = (text.match(/[.,;:?!"'()\[\]{}<>]/g) || []).length;
+    const englishSymbols = (text.match(/[.,;:?!'"()\[\]{}<>]/g) || []).length;
     
     // 数字
     const numbers = (text.match(/\d/g) || []).length;
@@ -106,16 +104,9 @@ const WordCount = () => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast({
-        title: "复制成功",
-        description: "内容已复制到剪贴板",
-      });
+      toast.success("内容已复制到剪贴板");
     } catch (err) {
-      toast({
-        title: "复制失败",
-        description: "请手动复制内容",
-        variant: "destructive",
-      });
+      toast.error("复制失败，请手动复制内容");
     }
   };
 
@@ -127,10 +118,11 @@ const WordCount = () => {
     if (!isLiked) {
       setLikes(likes + 1);
       setIsLiked(true);
-      toast({
-        title: "点赞成功",
-        description: "感谢您的支持！",
-      });
+      toast.success("感谢您的点赞！");
+    } else {
+      setLikes(likes - 1);
+      setIsLiked(false);
+      toast.success("已取消点赞");
     }
   };
 
@@ -152,168 +144,174 @@ const WordCount = () => {
   };
 
   return (
-    <Layout currentTool="字数统计工具">
-      <div className="p-6 max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">字数统计工具</h1>
-          <p className="text-gray-600">精确统计文本的字数、字符数等详细信息，接近Word统计规则</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 输入区域 */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">输入文本</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  placeholder="请输入要统计的文本内容..."
-                  className="min-h-[400px] resize-none"
-                />
-                <div className="mt-4 flex space-x-2">
-                  <Button 
-                    onClick={clearAll}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <RotateCcw className="w-4 h-4 mr-2" />
-                    清空
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* 工具标题和统计 */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center float-animation">
+            <span className="text-2xl">📊</span>
           </div>
-
-          {/* 统计结果区域 */}
           <div>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">统计结果</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
-                    <span className="font-medium text-blue-800">总字数</span>
-                    <span className="font-bold text-blue-600">{stats.totalWords.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <span className="text-sm text-gray-600">总字符数(UTF-8)</span>
-                    <span className="font-medium">{stats.totalCharsUTF8.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <span className="text-sm text-gray-600">总字符数(GBK)</span>
-                    <span className="font-medium">{stats.totalCharsGBK.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-green-50 rounded">
-                    <span className="text-sm text-green-700">总汉字数</span>
-                    <span className="font-medium text-green-600">{stats.chineseChars.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <span className="text-sm text-gray-600">汉字符号</span>
-                    <span className="font-medium">{stats.chineseSymbols.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
-                    <span className="text-sm text-purple-700">外文字母</span>
-                    <span className="font-medium text-purple-600">{stats.englishLetters.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
-                    <span className="text-sm text-purple-700">外文单词</span>
-                    <span className="font-medium text-purple-600">{stats.englishWords.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <span className="text-sm text-gray-600">外文符号</span>
-                    <span className="font-medium">{stats.englishSymbols.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-2 bg-yellow-50 rounded">
-                    <span className="text-sm text-yellow-700">数字</span>
-                    <span className="font-medium text-yellow-600">{stats.numbers.toLocaleString()}</span>
-                  </div>
-                </div>
-                
-                <div className="mt-4">
-                  <Button 
-                    onClick={copyStats}
-                    size="sm"
-                    className="w-full"
-                  >
-                    <Copy className="w-4 h-4 mr-2" />
-                    复制统计结果
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <h1 className="text-2xl font-bold category-title">字数统计工具</h1>
+            <p className="text-muted-foreground">精确统计文本的字数、字符数等详细信息</p>
           </div>
         </div>
-
-        {/* 使用说明 */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <Info className="w-5 h-5 mr-2" />
-              统计说明
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 text-sm text-gray-600">
-              <div>
-                <strong>总字数：</strong>接近Word统计规则，中文字符数 + 英文单词数
-              </div>
-              <div>
-                <strong>总字符数(UTF-8)：</strong>所有字符的数量，每个字符计为1
-              </div>
-              <div>
-                <strong>总字符数(GBK)：</strong>按GBK编码计算，中文字符2字节，其他1字节
-              </div>
-              <div>
-                <strong>总汉字数：</strong>中文汉字字符的数量
-              </div>
-              <div>
-                <strong>汉字符号：</strong>中文标点符号的数量
-              </div>
-              <div>
-                <strong>外文字母：</strong>英文字母(a-z, A-Z)的数量
-              </div>
-              <div>
-                <strong>外文单词：</strong>英文单词的数量
-              </div>
-              <div>
-                <strong>外文符号：</strong>英文标点符号的数量
-              </div>
-              <div>
-                <strong>数字：</strong>阿拉伯数字(0-9)的数量
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 点赞和收藏 */}
-        <div className="mt-6 flex justify-center space-x-4">
-          <Button 
-            onClick={handleLike}
-            variant={isLiked ? "default" : "outline"}
-            className={isLiked ? "bg-red-500 hover:bg-red-600" : ""}
-          >
-            <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current' : ''}`} />
-            点赞 ({likes.toLocaleString()})
-          </Button>
-          <Button variant="outline">
-            <Copy className="w-4 h-4 mr-2" />
-            收藏
-          </Button>
+        
+        <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <span>2638次使用</span>
+          </div>
         </div>
       </div>
-    </Layout>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 输入区域 */}
+        <div className="lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">输入文本</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="请输入要统计的文本内容..."
+                className="min-h-[400px] resize-none"
+              />
+              <div className="mt-4 flex space-x-2">
+                <Button 
+                  onClick={clearAll}
+                  variant="outline"
+                  size="sm"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  清空
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 统计结果区域 */}
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">统计结果</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                  <span className="font-medium text-blue-800">总字数</span>
+                  <span className="font-bold text-blue-600">{stats.totalWords.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                  <span className="text-sm text-gray-600">总字符数(UTF-8)</span>
+                  <span className="font-medium">{stats.totalCharsUTF8.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                  <span className="text-sm text-gray-600">总字符数(GBK)</span>
+                  <span className="font-medium">{stats.totalCharsGBK.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-green-50 rounded">
+                  <span className="text-sm text-green-700">总汉字数</span>
+                  <span className="font-medium text-green-600">{stats.chineseChars.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                  <span className="text-sm text-gray-600">汉字符号</span>
+                  <span className="font-medium">{stats.chineseSymbols.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
+                  <span className="text-sm text-purple-700">外文字母</span>
+                  <span className="font-medium text-purple-600">{stats.englishLetters.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
+                  <span className="text-sm text-purple-700">外文单词</span>
+                  <span className="font-medium text-purple-600">{stats.englishWords.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                  <span className="text-sm text-gray-600">外文符号</span>
+                  <span className="font-medium">{stats.englishSymbols.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-2 bg-yellow-50 rounded">
+                  <span className="text-sm text-yellow-700">数字</span>
+                  <span className="font-medium text-yellow-600">{stats.numbers.toLocaleString()}</span>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <Button 
+                  onClick={copyStats}
+                  size="sm"
+                  className="w-full"
+                >
+                  <Copy className="w-4 h-4 mr-2" />
+                  复制统计结果
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* 使用说明 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="w-5 h-5" />
+            统计说明
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-medium mb-2">统计规则</h4>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• <strong>总字数:</strong> 中文字符数 + 英文单词数</li>
+                <li>• <strong>总字符数(UTF-8):</strong> 所有字符的数量</li>
+                <li>• <strong>总字符数(GBK):</strong> 中文字符2字节，其他1字节</li>
+                <li>• <strong>总汉字数:</strong> 中文汉字字符的数量</li>
+                <li>• <strong>汉字符号:</strong> 中文标点符号的数量</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2">其他统计</h4>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• <strong>外文字母:</strong> 英文字母(a-z, A-Z)的数量</li>
+                <li>• <strong>外文单词:</strong> 英文单词的数量</li>
+                <li>• <strong>外文符号:</strong> 英文标点符号的数量</li>
+                <li>• <strong>数字:</strong> 阿拉伯数字(0-9)的数量</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+            <p className="text-sm text-muted-foreground">
+              💡 <strong>小贴士:</strong> 统计规则接近Word，支持中英文混合文本的精确统计。
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 操作按钮 */}
+      <div className="flex justify-center">
+        <Button 
+          onClick={handleLike}
+          variant={isLiked ? "default" : "outline"}
+          className={isLiked ? "text-red-500 border-red-200" : ""}
+        >
+          <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current' : ''}`} />
+          {isLiked ? '已点赞' : '点赞'} ({likes.toLocaleString()})
+        </Button>
+      </div>
+    </div>
   );
 };
 

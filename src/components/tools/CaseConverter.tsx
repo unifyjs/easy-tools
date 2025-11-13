@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
-import Layout from '@/components/Layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Heart, Copy, RotateCcw, Info } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Type, 
+  ArrowUpDown,
+  Copy,
+  RotateCcw,
+  Heart,
+  Zap
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-const CaseConverter = () => {
+const CaseConverterTool: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
-  const [autoCopy, setAutoCopy] = useState(false);
-  const [newTextBox, setNewTextBox] = useState(false);
-  const [likes, setLikes] = useState(53072);
+  const [likes, setLikes] = useState(4400);
   const [isLiked, setIsLiked] = useState(false);
-  const { toast } = useToast();
 
-  const convertCase = (type: string) => {
+  // 大小写转换函数
+  const convertCase = (type: 'upper' | 'lower' | 'title' | 'sentence' | 'toggle' | 'camel' | 'pascal' | 'snake') => {
+    if (!inputText.trim()) {
+      toast.error('请输入要转换的文本');
+      return;
+    }
+
     let result = '';
     
     switch (type) {
@@ -32,9 +42,12 @@ const CaseConverter = () => {
         );
         break;
       case 'sentence':
-        result = inputText.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => 
-          c.toUpperCase()
-        );
+        result = inputText.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase());
+        break;
+      case 'toggle':
+        result = inputText.split('').map(char => 
+          char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()
+        ).join('');
         break;
       case 'camel':
         result = inputText.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
@@ -47,257 +60,244 @@ const CaseConverter = () => {
         ).replace(/\s+/g, '');
         break;
       case 'snake':
-        result = inputText.toLowerCase().replace(/\s+/g, '_');
+        result = inputText.replace(/\W+/g, ' ')
+          .split(/ |\B(?=[A-Z])/)
+          .map(word => word.toLowerCase())
+          .join('_');
         break;
-      case 'kebab':
-        result = inputText.toLowerCase().replace(/\s+/g, '-');
-        break;
-      default:
-        result = inputText;
     }
     
     setOutputText(result);
+    toast.success('转换完成！');
+  };
+
+  // 复制到剪贴板
+  const copyToClipboard = async () => {
+    if (!outputText) {
+      toast.error('没有可复制的内容');
+      return;
+    }
     
-    if (autoCopy && result) {
-      copyToClipboard(result);
-    }
-  };
-
-  const copyToClipboard = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
-      toast({
-        title: "复制成功",
-        description: "内容已复制到剪贴板",
-      });
+      await navigator.clipboard.writeText(outputText);
+      toast.success('已复制到剪贴板');
     } catch (err) {
-      toast({
-        title: "复制失败",
-        description: "请手动复制内容",
-        variant: "destructive",
-      });
+      toast.error('复制失败，请手动复制');
     }
   };
 
+  // 清空内容
   const clearAll = () => {
     setInputText('');
     setOutputText('');
+    toast.success('内容已清空');
   };
 
+  // 点赞功能
   const handleLike = () => {
     if (!isLiked) {
-      setLikes(likes + 1);
+      setLikes(prev => prev + 1);
       setIsLiked(true);
-      toast({
-        title: "点赞成功",
-        description: "感谢您的支持！",
-      });
+      toast.success('感谢您的点赞！');
+    } else {
+      setLikes(prev => prev - 1);
+      setIsLiked(false);
+      toast.success('已取消点赞');
     }
   };
 
   return (
-    <Layout currentTool="英文字母大小写转换">
-      <div className="p-6 max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">英文字母大小写转换</h1>
-          <p className="text-gray-600">快速转换英文字母的大小写格式，支持多种转换模式</p>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* 工具标题和统计 */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center float-animation">
+            <ArrowUpDown className="w-6 h-6 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold category-title">英文字母大小写转换</h1>
+            <p className="text-muted-foreground">支持多种大小写转换格式</p>
+          </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 输入区域 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">输入文本</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="请输入要转换的英文文本..."
-                className="min-h-[200px] resize-none"
-              />
-              <div className="mt-4 space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="autoCopy" 
-                    checked={autoCopy}
-                    onCheckedChange={(checked) => setAutoCopy(checked as boolean)}
-                  />
-                  <label htmlFor="autoCopy" className="text-sm text-gray-600">
-                    转换自动复制结果
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="newTextBox" 
-                    checked={newTextBox}
-                    onCheckedChange={(checked) => setNewTextBox(checked as boolean)}
-                  />
-                  <label htmlFor="newTextBox" className="text-sm text-gray-600">
-                    新文本框显示结果
-                  </label>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 输出区域 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">转换结果</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                value={outputText}
-                readOnly
-                placeholder="转换结果将显示在这里..."
-                className="min-h-[200px] resize-none bg-gray-50"
-              />
-              <div className="mt-4 flex space-x-2">
-                <Button 
-                  onClick={() => copyToClipboard(outputText)}
-                  disabled={!outputText}
-                  size="sm"
-                >
-                  <Copy className="w-4 h-4 mr-2" />
-                  复制结果
-                </Button>
-                <Button 
-                  onClick={clearAll}
-                  variant="outline"
-                  size="sm"
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  清空
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 转换按钮区域 */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-lg">转换操作</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Button 
-                onClick={() => convertCase('upper')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                全部大写
-              </Button>
-              <Button 
-                onClick={() => convertCase('lower')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                全部小写
-              </Button>
-              <Button 
-                onClick={() => convertCase('title')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                首字母大写
-              </Button>
-              <Button 
-                onClick={() => convertCase('sentence')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                句子首字母大写
-              </Button>
-              <Button 
-                onClick={() => convertCase('camel')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                驼峰命名
-              </Button>
-              <Button 
-                onClick={() => convertCase('pascal')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                帕斯卡命名
-              </Button>
-              <Button 
-                onClick={() => convertCase('snake')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                下划线命名
-              </Button>
-              <Button 
-                onClick={() => convertCase('kebab')}
-                disabled={!inputText}
-                className="wawa-button"
-              >
-                中横线命名
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 使用说明 */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <Info className="w-5 h-5 mr-2" />
-              使用说明
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 text-sm text-gray-600">
-              <div>
-                <strong>全部大写：</strong>将所有字母转换为大写形式
-              </div>
-              <div>
-                <strong>全部小写：</strong>将所有字母转换为小写形式
-              </div>
-              <div>
-                <strong>首字母大写：</strong>每个单词的首字母大写，其余小写
-              </div>
-              <div>
-                <strong>句子首字母大写：</strong>每个句子的首字母大写
-              </div>
-              <div>
-                <strong>驼峰命名：</strong>第一个单词小写，后续单词首字母大写，无空格
-              </div>
-              <div>
-                <strong>帕斯卡命名：</strong>所有单词首字母大写，无空格
-              </div>
-              <div>
-                <strong>下划线命名：</strong>单词间用下划线连接，全部小写
-              </div>
-              <div>
-                <strong>中横线命名：</strong>单词间用中横线连接，全部小写
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 点赞和收藏 */}
-        <div className="mt-6 flex justify-center space-x-4">
-          <Button 
-            onClick={handleLike}
-            variant={isLiked ? "default" : "outline"}
-            className={isLiked ? "bg-red-500 hover:bg-red-600" : ""}
-          >
-            <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current' : ''}`} />
-            点赞 ({likes.toLocaleString()})
-          </Button>
-          <Button variant="outline">
-            <Copy className="w-4 h-4 mr-2" />
-            收藏
-          </Button>
+        
+        <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Heart className={`w-4 h-4 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+            <span>{likes.toLocaleString()}</span>
+          </div>
+          <Separator orientation="vertical" className="h-4" />
+          <div>访问量: 4400万+</div>
         </div>
       </div>
-    </Layout>
+
+      {/* 转换工具 */}
+      <Card className="tool-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Type className="w-5 h-5" />
+            文本转换
+          </CardTitle>
+          <CardDescription>
+            在下方输入要转换的英文文本，选择转换类型即可快速转换
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* 输入区域 */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">输入文本</label>
+            <Textarea
+              placeholder="请输入要转换的英文文本..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="min-h-[120px] resize-none"
+            />
+            <div className="text-xs text-muted-foreground">
+              字符数: {inputText.length}
+            </div>
+          </div>
+
+          {/* 转换按钮 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Button
+              onClick={() => convertCase('upper')}
+              className="btn-gradient"
+              disabled={!inputText.trim()}
+            >
+              全部大写
+            </Button>
+            <Button
+              onClick={() => convertCase('lower')}
+              className="btn-gradient"
+              disabled={!inputText.trim()}
+            >
+              全部小写
+            </Button>
+            <Button
+              onClick={() => convertCase('title')}
+              className="btn-gradient"
+              disabled={!inputText.trim()}
+            >
+              标题格式
+            </Button>
+            <Button
+              onClick={() => convertCase('sentence')}
+              className="btn-gradient"
+              disabled={!inputText.trim()}
+            >
+              句子格式
+            </Button>
+            <Button
+              onClick={() => convertCase('toggle')}
+              variant="outline"
+              disabled={!inputText.trim()}
+            >
+              大小写切换
+            </Button>
+            <Button
+              onClick={() => convertCase('camel')}
+              variant="outline"
+              disabled={!inputText.trim()}
+            >
+              驼峰命名
+            </Button>
+            <Button
+              onClick={() => convertCase('pascal')}
+              variant="outline"
+              disabled={!inputText.trim()}
+            >
+              帕斯卡命名
+            </Button>
+            <Button
+              onClick={() => convertCase('snake')}
+              variant="outline"
+              disabled={!inputText.trim()}
+            >
+              下划线命名
+            </Button>
+          </div>
+
+          {/* 输出区域 */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">转换结果</label>
+            <Textarea
+              placeholder="转换结果将显示在这里..."
+              value={outputText}
+              readOnly
+              className="min-h-[120px] resize-none bg-secondary/50"
+            />
+            <div className="text-xs text-muted-foreground">
+              字符数: {outputText.length}
+            </div>
+          </div>
+
+          {/* 操作按钮 */}
+          <div className="flex gap-3">
+            <Button
+              onClick={copyToClipboard}
+              disabled={!outputText}
+              className="flex-1"
+            >
+              <Copy className="w-4 h-4 mr-2" />
+              复制结果
+            </Button>
+            <Button
+              onClick={clearAll}
+              variant="outline"
+              className="flex-1"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              清空内容
+            </Button>
+            <Button
+              onClick={handleLike}
+              variant="outline"
+              className={isLiked ? 'text-red-500 border-red-200' : ''}
+            >
+              <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 使用说明 */}
+      <Card className="tool-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="w-5 h-5" />
+            使用说明
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-medium mb-2">基础转换</h4>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• <strong>全部大写:</strong> 将所有字母转为大写</li>
+                <li>• <strong>全部小写:</strong> 将所有字母转为小写</li>
+                <li>• <strong>标题格式:</strong> 每个单词首字母大写</li>
+                <li>• <strong>句子格式:</strong> 句首字母大写</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2">编程命名</h4>
+              <ul className="space-y-1 text-muted-foreground">
+                <li>• <strong>驼峰命名:</strong> firstName (首字母小写)</li>
+                <li>• <strong>帕斯卡命名:</strong> FirstName (首字母大写)</li>
+                <li>• <strong>下划线命名:</strong> first_name</li>
+                <li>• <strong>大小写切换:</strong> 反转当前大小写</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+            <p className="text-sm text-muted-foreground">
+              💡 <strong>小贴士:</strong> 支持批量文本处理，可以同时转换多行文本。转换结果可以直接复制使用。
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
-export default CaseConverter;
+export default CaseConverterTool;
