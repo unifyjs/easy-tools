@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { toolCategories, getAllTools, type Tool, type ToolCategory } from '@/data/tools';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Search, Home, Wrench, ChevronDown, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -29,6 +30,7 @@ const Index = () => {
   );
   
   const allTools = getAllTools();
+  const navigate = useNavigate();
   
   const toggleCategory = (categoryId: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -41,8 +43,8 @@ const Index = () => {
   };
   
   const handleToolSelect = (toolId: string, categoryId: string) => {
-    setSelectedTool(toolId);
-    setSelectedCategory(categoryId);
+    // 导航到工具页面
+    navigate(`/tools/${toolId}`);
   };
   
   const filteredTools = React.useMemo(() => {
