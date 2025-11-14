@@ -24,7 +24,9 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTool, setSelectedTool] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['all']));
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set(['all', ...toolCategories.map(cat => cat.id)])
+  );
   
   const allTools = getAllTools();
   
@@ -111,7 +113,7 @@ const Index = () => {
                           onClick={() => toggleCategory(category.id)}
                           className="hover:bg-blue-50 font-medium"
                         >
-                          <svg width="18" height="18" viewBox="0 0 48 48" class="text-orange-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7H16C20.4183 7 24 10.5817 24 15V42C24 38.6863 21.3137 36 18 36H5V7Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="bevel"></path><path d="M43 7H32C27.5817 7 24 10.5817 24 15V42C24 38.6863 26.6863 36 30 36H43V7Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="bevel"></path></svg>
+                          <div dangerouslySetInnerHTML={{ __html: category.icon }} />
                           <span>{category.name}</span>
                           <div className="ml-auto flex items-center gap-2">
                             {expandedCategories.has(category.id) ? (
@@ -133,7 +135,6 @@ const Index = () => {
                                 isActive={selectedTool === tool.id}
                                 className="hover:bg-blue-50 data-[active=true]:bg-blue-100 data-[active=true]:text-blue-700 text-sm pl-2"
                               >
-                                <span className="text-base">{tool.icon}</span>
                                 <span>{tool.name}</span>
                               </SidebarMenuButton>
                             </SidebarMenuItem>

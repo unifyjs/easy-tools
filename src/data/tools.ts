@@ -16,6 +16,48 @@ export interface ToolCategory {
 
 export const toolCategories: ToolCategory[] = [
   {
+    id: 'endecode-tools',
+    name: '编码解码',
+    icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-blue-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 13L4 25.4322L16 37" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 13L44 25.4322L32 37" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 4L21 44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
+    tools: [
+      {
+        id: 'base64-encoder',
+        name: 'Base64编解码',
+        description: 'Base64编码和解码工具，支持文本和文件',
+        category: 'code-tools',
+        icon: ''
+      },
+      {
+        id: 'url-encoder',
+        name: 'URL编解码',
+        description: 'URL编码和解码工具，处理特殊字符',
+        category: 'code-tools',
+        icon: ''
+      }
+    ]
+  },
+  {
+    id: 'code-tools',
+    name: '代码工具',
+    icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-blue-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 13L4 25.4322L16 37" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 13L44 25.4322L32 37" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 4L21 44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
+    tools: [
+      {
+        id: 'code-formatter',
+        name: '代码格式化',
+        description: '格式化JavaScript、CSS、HTML等代码，提高可读性',
+        category: 'code-tools',
+        icon: ''
+      },
+      {
+        id: 'json-viewer',
+        name: 'JSON查看器',
+        description: '美化和验证JSON数据，支持树形结构显示',
+        category: 'code-tools',
+        icon: ''
+      },
+    ]
+  },
+  {
     id: 'text-tools',
     name: '文本工具',
     icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-orange-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7H16C20.4183 7 24 10.5817 24 15V42C24 38.6863 21.3137 36 18 36H5V7Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="bevel"></path><path d="M43 7H32C27.5817 7 24 10.5817 24 15V42C24 38.6863 26.6863 36 30 36H43V7Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="bevel"></path></svg>',
@@ -51,44 +93,9 @@ export const toolCategories: ToolCategory[] = [
     ]
   },
   {
-    id: 'code-tools',
-    name: '代码工具',
-    icon: '💻',
-    tools: [
-      {
-        id: 'code-formatter',
-        name: '代码格式化',
-        description: '格式化JavaScript、CSS、HTML等代码，提高可读性',
-        category: 'code-tools',
-        icon: ''
-      },
-      {
-        id: 'json-viewer',
-        name: 'JSON查看器',
-        description: '美化和验证JSON数据，支持树形结构显示',
-        category: 'code-tools',
-        icon: ''
-      },
-      {
-        id: 'base64-encoder',
-        name: 'Base64编解码',
-        description: 'Base64编码和解码工具，支持文本和文件',
-        category: 'code-tools',
-        icon: ''
-      },
-      {
-        id: 'url-encoder',
-        name: 'URL编解码',
-        description: 'URL编码和解码工具，处理特殊字符',
-        category: 'code-tools',
-        icon: ''
-      }
-    ]
-  },
-  {
     id: 'conversion-tools',
     name: '转换工具',
-    icon: '🔄',
+    icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-green-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M33 15L24 24L15 15" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M33 33L24 24L15 33" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     tools: [
       {
         id: 'unit-converter',
@@ -123,7 +130,7 @@ export const toolCategories: ToolCategory[] = [
   {
     id: 'generator-tools',
     name: '生成工具',
-    icon: '⚡',
+    icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-yellow-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24.0605 4L35.5 16L24.5 16L28.5 28L13 16L23.5 16L24.0605 4Z" fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>',
     tools: [
       {
         id: 'qr-generator',
@@ -158,7 +165,7 @@ export const toolCategories: ToolCategory[] = [
   {
     id: 'image-tools',
     name: '图像工具',
-    icon: '🖼️',
+    icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-purple-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="36" height="36" rx="3" ry="3" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="16" cy="16" r="3" fill="currentColor"/><path d="M42 32L32 22L12 42" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     tools: [
       {
         id: 'image-compressor',
@@ -193,7 +200,7 @@ export const toolCategories: ToolCategory[] = [
   {
     id: 'network-tools',
     name: '网络工具',
-    icon: '🌐',
+    icon: '<svg width="18" height="18" viewBox="0 0 48 48" class="text-cyan-400 size-5" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M4 24H44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M24 4C24 4 32 12 32 24C32 36 24 44 24 44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M24 4C24 4 16 12 16 24C16 36 24 44 24 44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
     tools: [
       {
         id: 'ip-lookup',
