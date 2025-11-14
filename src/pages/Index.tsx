@@ -183,7 +183,8 @@ const Index = () => {
                   </div>
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl">
-                      <span className="text-3xl">{selectedToolData.icon}</span>
+                      {/* <span className="text-3xl">{selectedToolData.icon}</span> */}
+                      <div dangerouslySetInnerHTML={{ __html: selectedToolData.icon }} />
                     </div>
                     <div>
                       <h1 className="text-3xl font-bold text-gray-900 mb-2">{selectedToolData.name}</h1>
@@ -230,11 +231,13 @@ const Index = () => {
                   className="group hover:shadow-lg transition-all duration-200 border-gray-200 hover:border-blue-200 bg-white/80 backdrop-blur-sm cursor-pointer"
                   onClick={() => handleToolSelect(tool.id, tool.category)}
                 >
-                  <CardHeader className="pb-3">
+                  <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg group-hover:from-blue-200 group-hover:to-purple-200 transition-colors">
-                          <span className="text-lg">{tool.icon}</span>
+                          {/* <span className="text-lg">{tool.icon}</span> */}
+                          
+                          <div dangerouslySetInnerHTML={{ __html: tool.icon }} />
                         </div>
                         <div>
                           <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
