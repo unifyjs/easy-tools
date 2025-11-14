@@ -2,252 +2,175 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 易用工具设计系统 */
-:root {
-  /* 主色调 - 现代蓝绿色系 */
-  --primary: 210 100% 50%;
-  --primary-foreground: 0 0% 100%;
-  --primary-glow: 210 100% 60%;
-  --primary-variant: 195 100% 45%;
-  
-  /* 次要色调 */
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 210 40% 10%;
-  
-  /* 强调色 */
-  --accent: 142 76% 36%;
-  --accent-foreground: 0 0% 100%;
-  
-  /* 背景色 */
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  
-  /* 卡片和边框 */
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  
-  /* 渐变 */
-  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(142 76% 46%));
-  --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(210 40% 98%));
-  
-  /* 阴影 */
-  --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
-  --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
-  --shadow-card: 0 4px 20px -4px hsl(210 40% 8% / 0.1);
-  
-  /* 动画 */
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
+/* Easy Tools Design System - Inspired by daisyUI */
+/* All colors MUST be HSL for proper theme support */
 
-/* 深色主题 */
-[data-theme="dark"] {
-  --primary: 210 100% 60%;
-  --primary-foreground: 0 0% 100%;
-  --primary-glow: 210 100% 70%;
-  --primary-variant: 195 100% 55%;
-  
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  
-  --accent: 142 76% 46%;
-  --accent-foreground: 0 0% 100%;
-  
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  
-  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(142 76% 56%));
-  --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(217.2 32.6% 8%));
-  
-  --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.4);
-  --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.5);
-  --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
-}
-
-/* 紫色主题 */
-[data-theme="purple"] {
-  --primary: 270 100% 60%;
-  --primary-foreground: 0 0% 100%;
-  --primary-glow: 270 100% 70%;
-  --primary-variant: 285 100% 55%;
-  
-  --accent: 315 100% 50%;
-  --accent-foreground: 0 0% 100%;
-  
-  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(315 100% 60%));
-}
-
-/* 绿色主题 */
-[data-theme="green"] {
-  --primary: 142 76% 36%;
-  --primary-foreground: 0 0% 100%;
-  --primary-glow: 142 76% 46%;
-  --primary-variant: 157 76% 36%;
-  
-  --accent: 210 100% 50%;
-  --accent-foreground: 0 0% 100%;
-  
-  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(210 100% 60%));
-}
-
-/* 橙色主题 */
-[data-theme="orange"] {
-  --primary: 25 95% 53%;
-  --primary-foreground: 0 0% 100%;
-  --primary-glow: 25 95% 63%;
-  --primary-variant: 40 95% 53%;
-  
-  --accent: 270 100% 60%;
-  --accent-foreground: 0 0% 100%;
-  
-  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-  --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(270 100% 70%));
-}
-
-/* 基础样式 */
-* {
-  border-color: hsl(var(--border));
-}
-
-body {
-  color: hsl(var(--foreground));
-  background: hsl(var(--background));
-  font-feature-settings: "rlig" 1, "calt" 1;
-  transition: var(--transition-smooth);
-}
-
-/* 自定义滚动条 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: hsl(var(--secondary));
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.6);
-  border-radius: 4px;
-  transition: var(--transition-smooth);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
-}
-
-/* 工具卡片样式 */
-.tool-card {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-card);
-  transition: var(--transition-smooth);
-}
-
-.tool-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-elegant);
-}
-
-/* 渐变按钮 */
-.btn-gradient {
-  background: var(--gradient-primary);
-  color: hsl(var(--primary-foreground));
-  border: none;
-  transition: var(--transition-smooth);
-}
-
-.btn-gradient:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-glow);
-}
-
-/* 发光效果 */
-.glow-effect {
-  box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
-  animation: pulse-glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes pulse-glow {
-  from {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
-  }
-  to {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
-  }
-}
-
-/* 浮动动画 */
-.float-animation {
-  animation: float 3s ease-in-out infinite;
+/* Custom animations and effects */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@layer base {
+  :root {
+    /* daisyUI inspired color palette */
+    --background: 0 0% 100%;
+    --foreground: 220 13% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+
+    /* Primary colors - Blue gradient theme */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 217 91% 70%;
+
+    /* Secondary colors - Purple accent */
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 217 91% 95%;
+    --accent-foreground: 217 91% 60%;
+
+    /* Status colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Border and input colors */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar colors - matching the main theme */
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 220 13% 18%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 91% 95%;
+    --sidebar-accent-foreground: 217 91% 60%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(262 83% 58%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 13% 98%));
+    --shadow-elegant: 0 10px 30px -10px hsl(217 91% 60% / 0.2);
+    --shadow-glow: 0 0 40px hsl(217 91% 70% / 0.3);
   }
-  50% {
-    transform: translateY(-10px);
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
-/* 主题切换按钮样式 */
-.theme-switcher {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 50px;
-  padding: 8px;
-  box-shadow: var(--shadow-card);
-  transition: var(--transition-smooth);
-}
-
-.theme-switcher:hover {
-  box-shadow: var(--shadow-elegant);
-}
-
-/* 侧边栏样式 */
-.sidebar {
-  background: var(--gradient-subtle);
-  border-right: 1px solid hsl(var(--border));
-  backdrop-filter: blur(10px);
-}
-
-/* 工具分类标题 */
-.category-title {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .theme-switcher {
-    top: 10px;
-    right: 10px;
-    padding: 6px;
+@layer base {
+  * {
+    @apply border-border;
   }
-  
-  .tool-card {
-    padding: 1rem;
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* daisyUI inspired component classes */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .card {
+    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-gray-900/80 backdrop-blur-sm border border-gray-700/20;
   }
 }
