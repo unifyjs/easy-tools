@@ -48,9 +48,13 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "diff": "^8.0.2",
+    "dompurify": "^3.3.0",
     "embla-carousel-react": "^8.3.0",
+    "highlight.js": "^11.11.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
+    "marked": "^17.0.0",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
@@ -63,10 +67,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.3",
-    "zod": "^3.23.8",
-    "marked": "^14.1.2",
-    "dompurify": "^3.1.7",
-    "highlight.js": "^11.10.0"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/generator": "^7.28.0",
@@ -75,6 +76,10 @@
     "@babel/types": "^7.28.0",
     "@eslint/js": "^9.9.0",
     "@tailwindcss/typography": "^0.5.15",
+    "@types/diff": "^7.0.2",
+    "@types/dompurify": "^3.0.5",
+    "@types/highlight.js": "^9.12.4",
+    "@types/marked": "^5.0.2",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -89,7 +94,6 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1",
-    "@types/dompurify": "^3.0.5"
+    "vite": "^5.4.1"
   }
 }
