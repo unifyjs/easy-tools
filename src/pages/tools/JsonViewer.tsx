@@ -3,16 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Copy, ArrowLeft, Eye, Code } from 'lucide-react';
+import { Copy, Eye, Code } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 const JsonViewer = () => {
   const [inputText, setInputText] = useState('');
   const [parsedJson, setParsedJson] = useState<any>(null);
   const [viewMode, setViewMode] = useState<'tree' | 'formatted'>('formatted');
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleParse = () => {
     if (!inputText.trim()) {
@@ -114,30 +112,8 @@ const JsonViewer = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+    <div className="p-6">
       <div className="max-w-4xl mx-auto">
-        {/* 头部 */}
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="mb-4 text-blue-600 hover:text-blue-700"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            返回首页
-          </Button>
-          
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl">
-              <Eye className="w-8 h-8 text-blue-500" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">JSON查看器</h1>
-              <p className="text-gray-600 text-lg">美化和验证JSON数据，支持树形结构显示</p>
-            </div>
-          </div>
-          <Badge variant="outline" className="mb-6">代码工具</Badge>
-        </div>
 
         {/* 输入区域 */}
         <Card className="mb-6">

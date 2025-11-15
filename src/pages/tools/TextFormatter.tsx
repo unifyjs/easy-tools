@@ -4,16 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, ArrowLeft } from 'lucide-react';
+import { Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 const TextFormatter = () => {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [formatType, setFormatType] = useState('json');
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const formatJSON = (text: string) => {
     try {
@@ -112,33 +110,8 @@ const TextFormatter = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+    <div className="p-6">
       <div className="max-w-4xl mx-auto">
-        {/* 头部 */}
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="mb-4 text-blue-600 hover:text-blue-700"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            返回首页
-          </Button>
-          
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl">
-              <svg width="32" height="32" viewBox="0 0 48 48" className="text-orange-400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 7H16C20.4183 7 24 10.5817 24 15V42C24 38.6863 21.3137 36 18 36H5V7Z" fill="none" stroke="currentColor" strokeWidth="4" strokeLinejoin="bevel"/>
-                <path d="M43 7H32C27.5817 7 24 10.5817 24 15V42C24 38.6863 26.6863 36 30 36H43V7Z" fill="none" stroke="currentColor" strokeWidth="4" strokeLinejoin="bevel"/>
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">文本格式化</h1>
-              <p className="text-gray-600 text-lg">格式化和美化各种文本内容，支持JSON、XML、HTML等格式</p>
-            </div>
-          </div>
-          <Badge variant="outline" className="mb-6">文本工具</Badge>
-        </div>
 
         {/* 格式选择 */}
         <Card className="mb-6">
