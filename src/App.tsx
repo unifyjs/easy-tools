@@ -33,6 +33,13 @@ import UnitConverter from "./pages/tools/UnitConverter";
 import UrlEncoder from "./pages/tools/UrlEncoder";
 import UuidGenerator from "./pages/tools/UuidGenerator";
 import WhoisLookup from "./pages/tools/WhoisLookup";
+import HtmlEncoder from "./pages/tools/HtmlEncoder";
+import UnicodeEncoder from "./pages/tools/UnicodeEncoder";
+import HexEncoder from "./pages/tools/HexEncoder";
+import Md5Hash from "./pages/tools/Md5Hash";
+import ShaHash from "./pages/tools/ShaHash";
+import JwtDecoder from "./pages/tools/JwtDecoder";
+import AsciiEncoder from "./pages/tools/AsciiEncoder";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +57,13 @@ const App = () => (
               {/* 编码解码工具 */}
               <Route path="/tools/base64-encoder" element={<Base64Encoder />} />
               <Route path="/tools/url-encoder" element={<UrlEncoder />} />
+              <Route path="/tools/html-encoder" element={<HtmlEncoder />} />
+              <Route path="/tools/unicode-encoder" element={<UnicodeEncoder />} />
+              <Route path="/tools/hex-encoder" element={<HexEncoder />} />
+              <Route path="/tools/md5-encoder" element={<Md5Hash />} />
+              <Route path="/tools/sha-encoder" element={<ShaHash />} />
+              <Route path="/tools/jwt-encoder" element={<JwtDecoder />} />
+              <Route path="/tools/asscii-encoder" element={<AsciiEncoder />} />
               
               {/* 代码工具 */}
               <Route path="/tools/code-formatter" element={<CodeFormatter />} />

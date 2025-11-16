@@ -33,6 +33,55 @@ export const toolCategories: ToolCategory[] = [
         description: 'URL编码和解码工具，处理特殊字符',
         category: 'endecode-tools',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'html-encoder',
+        name: 'HTML编解码',
+        description: 'HTML实体字符编码和解码工具，处理HTML中的特殊字符',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'unicode-encoder',
+        name: 'Unicode编解码',
+        description: 'Unicode字符与编码的相互转换，支持多种格式',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'hex-encoder',
+        name: 'Hex编解码',
+        description: '十六进制编码和解码工具，支持多种格式输出',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'md5-encoder',
+        name: 'MD5哈希',
+        description: '生成文本的MD5哈希值，常用于数据完整性验证',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'sha-encoder',
+        name: 'SHA哈希',
+        description: '生成文本的SHA-1或SHA-256哈希值，用于数据完整性验证和安全应用',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'jwt-encoder',
+        name: 'JWT解码',
+        description: 'JWT Token解析和验证工具，查看Token的Header、Payload和签名信息',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'asscii-encoder',
+        name: 'ASCII编解码',
+        description: 'ASCII码与字符的相互转换，支持多种进制格式',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       }
     ]
   },
