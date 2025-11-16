@@ -151,9 +151,13 @@ const ImageCropper = () => {
 
   const handleMouseDown = useCallback((e: React.MouseEvent, handle?: string) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!selectedImage) return;
 
-    const rect = e.currentTarget.getBoundingClientRect();
+    const imageContainer = imageRef.current?.parentElement;
+    if (!imageContainer) return;
+
+    const rect = imageContainer.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
@@ -167,10 +171,13 @@ const ImageCropper = () => {
     setDragStart({ x, y });
   }, [selectedImage]);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!selectedImage || (!isDragging && !isResizing)) return;
 
-    const rect = e.currentTarget.getBoundingClientRect();
+    const imageContainer = imageRef.current?.parentElement;
+    if (!imageContainer) return;
+
+    const rect = imageContainer.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const deltaX = x - dragStart.x;
@@ -234,6 +241,19 @@ const ImageCropper = () => {
     setIsResizing(false);
     setResizeHandle('');
   }, []);
+
+  // 添加全局事件监听器
+  useEffect(() => {
+    if (isDragging || isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
 
   const handleAspectRatioChange = useCallback((value: string) => {
     setAspectRatio(value);
@@ -556,9 +576,6 @@ const ImageCropper = () => {
                         width: selectedImage.displayWidth,
                         height: selectedImage.displayHeight,
                       }}
-                      onMouseMove={handleMouseMove}
-                      onMouseUp={handleMouseUp}
-                      onMouseLeave={handleMouseUp}
                     >
                       <img
                         ref={imageRef}
@@ -587,19 +604,19 @@ const ImageCropper = () => {
                       >
                         {/* 调整手柄 */}
                         <div
-                          className="absolute w-3 h-3 bg-primary border border-white rounded-full cursor-nw-resize -top-1.5 -left-1.5"
+                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-nw-resize -top-2 -left-2 hover:bg-primary/80 transition-colors z-10"
                           onMouseDown={(e) => handleMouseDown(e, 'nw')}
                         />
                         <div
-                          className="absolute w-3 h-3 bg-primary border border-white rounded-full cursor-ne-resize -top-1.5 -right-1.5"
+                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-ne-resize -top-2 -right-2 hover:bg-primary/80 transition-colors z-10"
                           onMouseDown={(e) => handleMouseDown(e, 'ne')}
                         />
                         <div
-                          className="absolute w-3 h-3 bg-primary border border-white rounded-full cursor-sw-resize -bottom-1.5 -left-1.5"
+                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-sw-resize -bottom-2 -left-2 hover:bg-primary/80 transition-colors z-10"
                           onMouseDown={(e) => handleMouseDown(e, 'sw')}
                         />
                         <div
-                          className="absolute w-3 h-3 bg-primary border border-white rounded-full cursor-se-resize -bottom-1.5 -right-1.5"
+                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-se-resize -bottom-2 -right-2 hover:bg-primary/80 transition-colors z-10"
                           onMouseDown={(e) => handleMouseDown(e, 'se')}
                         />
                       </div>
