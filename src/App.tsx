@@ -48,6 +48,7 @@ import ApiTester from "./pages/tools/ApiTester";
 import CodeConverter from "./pages/tools/CodeConverter";
 import CodeStats from "./pages/tools/CodeStats";
 import CommentGenerator from "./pages/tools/CommentGenerator";
+import JsonToEntity from "./pages/tools/JsonToEntity";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ const App = () => (
               <Route path="/tools/code-converter" element={<CodeConverter />} />
               <Route path="/tools/code-stats" element={<CodeStats />} />
               <Route path="/tools/comment-generator" element={<CommentGenerator />} />
+              <Route path="/tools/json-to-entity" element={<JsonToEntity />} />
               
               {/* 文本工具 */}
               <Route path="/tools/text-formatter" element={<TextFormatter />} />
