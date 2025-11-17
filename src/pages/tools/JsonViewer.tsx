@@ -216,6 +216,131 @@ const JsonViewer = () => {
     }
   };
 
+  // 直接格式化输入的JSON
+  const handleDirectFormat = () => {
+    if (!inputText.trim()) {
+      toast({
+        title: "输入为空",
+        description: "请输入JSON字符串",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(inputText);
+      const formatted = JSON.stringify(parsed, null, 2);
+      setInputText(formatted);
+      toast({
+        title: "格式化成功",
+        description: "JSON已格式化",
+      });
+    } catch (error: any) {
+      toast({
+        title: "格式化失败",
+        description: "JSON格式错误：" + error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // 直接压缩输入的JSON
+  const handleDirectCompress = () => {
+    if (!inputText.trim()) {
+      toast({
+        title: "输入为空",
+        description: "请输入JSON字符串",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(inputText);
+      const compressed = JSON.stringify(parsed);
+      setInputText(compressed);
+      toast({
+        title: "压缩成功",
+        description: "JSON已压缩",
+      });
+    } catch (error: any) {
+      toast({
+        title: "压缩失败",
+        description: "JSON格式错误：" + error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // 直接转义输入的JSON
+  const handleDirectEscape = () => {
+    if (!inputText.trim()) {
+      toast({
+        title: "输入为空",
+        description: "请输入JSON字符串",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(inputText);
+      const formatted = JSON.stringify(parsed, null, 2);
+      const escaped = JSON.stringify(formatted);
+      setInputText(escaped);
+      toast({
+        title: "转义成功",
+        description: "JSON已转义",
+      });
+    } catch (error: any) {
+      toast({
+        title: "转义失败",
+        description: "JSON格式错误：" + error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // 直接去除转义
+  const handleDirectUnescape = () => {
+    if (!inputText.trim()) {
+      toast({
+        title: "输入为空",
+        description: "请输入内容",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const unescaped = JSON.parse(inputText);
+      if (typeof unescaped === 'string') {
+        // 如果解析后是字符串，尝试再次解析为JSON
+        try {
+          const parsed = JSON.parse(unescaped);
+          const formatted = JSON.stringify(parsed, null, 2);
+          setInputText(formatted);
+        } catch {
+          // 如果不是JSON字符串，直接设置为去转义后的字符串
+          setInputText(unescaped);
+        }
+      } else {
+        const formatted = JSON.stringify(unescaped, null, 2);
+        setInputText(formatted);
+      }
+      toast({
+        title: "去转义成功",
+        description: "内容已去转义",
+      });
+    } catch (error: any) {
+      toast({
+        title: "去转义失败",
+        description: "格式错误：" + error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   // 格式化JSON
   const formatJson = () => {
     if (!parsedJson) return '';
@@ -409,10 +534,26 @@ const JsonViewer = () => {
               </div>
             </div>
 
-            <div className="flex gap-2 mt-4">
+            <div className="flex flex-wrap gap-2 mt-4">
               <Button onClick={handleParse}>
                 <Code className="w-4 h-4 mr-2" />
                 解析JSON
+              </Button>
+              <Button variant="outline" onClick={handleDirectFormat}>
+                <Maximize2 className="w-4 h-4 mr-2" />
+                格式化
+              </Button>
+              <Button variant="outline" onClick={handleDirectCompress}>
+                <Minimize2 className="w-4 h-4 mr-2" />
+                压缩
+              </Button>
+              <Button variant="outline" onClick={handleDirectEscape}>
+                <FileText className="w-4 h-4 mr-2" />
+                转义
+              </Button>
+              <Button variant="outline" onClick={handleDirectUnescape}>
+                <Eye className="w-4 h-4 mr-2" />
+                去转义
               </Button>
               <Button variant="outline" onClick={handleClear}>
                 <Trash2 className="w-4 h-4 mr-2" />
