@@ -40,6 +40,14 @@ import Md5Hash from "./pages/tools/Md5Hash";
 import ShaHash from "./pages/tools/ShaHash";
 import JwtDecoder from "./pages/tools/JwtDecoder";
 import AsciiEncoder from "./pages/tools/AsciiEncoder";
+import SqlFormatter from "./pages/tools/SqlFormatter";
+import XmlFormatter from "./pages/tools/XmlFormatter";
+import CssFormatter from "./pages/tools/CssFormatter";
+import CodeMinifier from "./pages/tools/CodeMinifier";
+import ApiTester from "./pages/tools/ApiTester";
+import CodeConverter from "./pages/tools/CodeConverter";
+import CodeStats from "./pages/tools/CodeStats";
+import CommentGenerator from "./pages/tools/CommentGenerator";
 
 const queryClient = new QueryClient();
 
@@ -63,11 +71,19 @@ const App = () => (
               <Route path="/tools/md5-encoder" element={<Md5Hash />} />
               <Route path="/tools/sha-encoder" element={<ShaHash />} />
               <Route path="/tools/jwt-encoder" element={<JwtDecoder />} />
-              <Route path="/tools/asscii-encoder" element={<AsciiEncoder />} />
+              <Route path="/tools/ascii-encoder" element={<AsciiEncoder />} />
               
               {/* 代码工具 */}
               <Route path="/tools/code-formatter" element={<CodeFormatter />} />
               <Route path="/tools/json-viewer" element={<JsonViewer />} />
+              <Route path="/tools/sql-formatter" element={<SqlFormatter />} />
+              <Route path="/tools/xml-formatter" element={<XmlFormatter />} />
+              <Route path="/tools/css-formatter" element={<CssFormatter />} />
+              <Route path="/tools/codeminifier" element={<CodeMinifier />} />
+              <Route path="/tools/apitester" element={<ApiTester />} />
+              <Route path="/tools/code-converter" element={<CodeConverter />} />
+              <Route path="/tools/code-stats" element={<CodeStats />} />
+              <Route path="/tools/comment-generator" element={<CommentGenerator />} />
               
               {/* 文本工具 */}
               <Route path="/tools/text-formatter" element={<TextFormatter />} />
