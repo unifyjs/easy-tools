@@ -13,6 +13,13 @@ interface JsonProperty {
   type: string;
   isArray: boolean;
   isOptional: boolean;
+  isCustomType: boolean;
+  customTypeName?: string;
+}
+
+interface GeneratedClass {
+  name: string;
+  properties: JsonProperty[];
 }
 
 const JsonToEntity = () => {
@@ -23,24 +30,30 @@ const JsonToEntity = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const detectType = (value: any): string => {
-    if (value === null) return "Object";
+  const detectType = (value: any, key: string = ""): { type: string; customTypeName?: string } => {
+    if (value === null) return { type: "Object" };
     if (Array.isArray(value)) {
-      if (value.length === 0) return "Object[]";
-      return detectType(value[0]) + "[]";
+      if (value.length === 0) return { type: "Object[]" };
+      const elementType = detectType(value[0], key);
+      return { 
+        type: elementType.type + "[]", 
+        customTypeName: elementType.customTypeName 
+      };
     }
     
     switch (typeof value) {
       case "string":
-        return "String";
+        return { type: "String" };
       case "number":
-        return Number.isInteger(value) ? "Integer" : "Double";
+        return { type: Number.isInteger(value) ? "Integer" : "Double" };
       case "boolean":
-        return "Boolean";
+        return { type: "Boolean" };
       case "object":
-        return "Object";
+        // 为嵌套对象生成自定义类型名
+        const customTypeName = toPascalCase(key || "NestedObject");
+        return { type: "Object", customTypeName };
       default:
-        return "Object";
+        return { type: "Object" };
     }
   };
 
@@ -57,26 +70,68 @@ const JsonToEntity = () => {
     return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   };
 
-  const analyzeJson = (obj: any): JsonProperty[] => {
+  const analyzeJsonRecursively = (obj: any, currentClassName: string = "MyClass"): GeneratedClass[] => {
+    const classes: GeneratedClass[] = [];
     const properties: JsonProperty[] = [];
     
     for (const [key, value] of Object.entries(obj)) {
-      const type = detectType(value);
+      const typeInfo = detectType(value, key);
+      let finalType = typeInfo.type.replace("[]", "");
+      let isCustomType = false;
+      let customTypeName = "";
+
+      // 处理嵌套对象
+      if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        customTypeName = typeInfo.customTypeName || toPascalCase(key);
+        finalType = customTypeName;
+        isCustomType = true;
+        
+        // 递归分析嵌套对象
+        const nestedClasses = analyzeJsonRecursively(value, customTypeName);
+        classes.push(...nestedClasses);
+      }
+      // 处理对象数组
+      else if (Array.isArray(value) && value.length > 0 && typeof value[0] === "object" && value[0] !== null) {
+        customTypeName = typeInfo.customTypeName || toPascalCase(key.replace(/s$/, "")); // 移除复数形式
+        finalType = customTypeName;
+        isCustomType = true;
+        
+        // 递归分析数组中的对象
+        const nestedClasses = analyzeJsonRecursively(value[0], customTypeName);
+        classes.push(...nestedClasses);
+      }
+
       properties.push({
         name: key,
-        type: type.replace("[]", ""),
-        isArray: type.includes("[]"),
-        isOptional: value === null || value === undefined
+        type: finalType,
+        isArray: typeInfo.type.includes("[]"),
+        isOptional: value === null || value === undefined,
+        isCustomType,
+        customTypeName: isCustomType ? customTypeName : undefined
       });
     }
     
-    return properties;
+    // 将当前类添加到类列表的开头
+    classes.unshift({
+      name: currentClassName,
+      properties
+    });
+    
+    return classes;
   };
 
-  const generateJavaClass = (properties: JsonProperty[], className: string): string => {
+  const generateJavaClasses = (classes: GeneratedClass[]): string => {
     const imports = new Set<string>();
+    let hasArrays = false;
     
-    if (properties.some(p => p.isArray)) {
+    // 检查是否需要导入List
+    classes.forEach(cls => {
+      if (cls.properties.some(p => p.isArray)) {
+        hasArrays = true;
+      }
+    });
+    
+    if (hasArrays) {
       imports.add("import java.util.List;");
     }
     
@@ -85,44 +140,56 @@ const JsonToEntity = () => {
       code += Array.from(imports).join("\n") + "\n\n";
     }
     
-    code += `public class ${className} {\n`;
-    
-    // Fields
-    properties.forEach(prop => {
-      const javaType = getJavaType(prop.type);
-      const fieldType = prop.isArray ? `List<${javaType}>` : javaType;
-      code += `    private ${fieldType} ${toCamelCase(prop.name)};\n`;
+    classes.forEach((cls, index) => {
+      if (index > 0) code += "\n\n";
+      
+      code += `public class ${cls.name} {\n`;
+      
+      // Fields
+      cls.properties.forEach(prop => {
+        const javaType = prop.isCustomType ? prop.customTypeName : getJavaType(prop.type);
+        const fieldType = prop.isArray ? `List<${javaType}>` : javaType;
+        code += `    private ${fieldType} ${toCamelCase(prop.name)};\n`;
+      });
+      
+      code += "\n";
+      
+      // Constructor
+      code += `    public ${cls.name}() {}\n\n`;
+      
+      // Getters and Setters
+      cls.properties.forEach(prop => {
+        const javaType = prop.isCustomType ? prop.customTypeName : getJavaType(prop.type);
+        const fieldType = prop.isArray ? `List<${javaType}>` : javaType;
+        const fieldName = toCamelCase(prop.name);
+        const methodName = toPascalCase(prop.name);
+        
+        code += `    public ${fieldType} get${methodName}() {\n`;
+        code += `        return ${fieldName};\n`;
+        code += `    }\n\n`;
+        
+        code += `    public void set${methodName}(${fieldType} ${fieldName}) {\n`;
+        code += `        this.${fieldName} = ${fieldName};\n`;
+        code += `    }\n\n`;
+      });
+      
+      code += "}";
     });
     
-    code += "\n";
-    
-    // Constructor
-    code += `    public ${className}() {}\n\n`;
-    
-    // Getters and Setters
-    properties.forEach(prop => {
-      const javaType = getJavaType(prop.type);
-      const fieldType = prop.isArray ? `List<${javaType}>` : javaType;
-      const fieldName = toCamelCase(prop.name);
-      const methodName = toPascalCase(prop.name);
-      
-      code += `    public ${fieldType} get${methodName}() {\n`;
-      code += `        return ${fieldName};\n`;
-      code += `    }\n\n`;
-      
-      code += `    public void set${methodName}(${fieldType} ${fieldName}) {\n`;
-      code += `        this.${fieldName} = ${fieldName};\n`;
-      code += `    }\n\n`;
-    });
-    
-    code += "}";
     return code;
   };
 
-  const generateCSharpClass = (properties: JsonProperty[], className: string): string => {
+  const generateCSharpClasses = (classes: GeneratedClass[]): string => {
     const imports = new Set<string>();
+    let hasArrays = false;
     
-    if (properties.some(p => p.isArray)) {
+    classes.forEach(cls => {
+      if (cls.properties.some(p => p.isArray)) {
+        hasArrays = true;
+      }
+    });
+    
+    if (hasArrays) {
       imports.add("using System.Collections.Generic;");
     }
     
@@ -131,68 +198,92 @@ const JsonToEntity = () => {
       code += Array.from(imports).join("\n") + "\n\n";
     }
     
-    code += `public class ${className}\n{\n`;
-    
-    properties.forEach(prop => {
-      const csharpType = getCSharpType(prop.type);
-      const fieldType = prop.isArray ? `List<${csharpType}>` : csharpType;
-      const optional = prop.isOptional ? "?" : "";
-      code += `    public ${fieldType}${optional} ${toPascalCase(prop.name)} { get; set; }\n`;
+    classes.forEach((cls, index) => {
+      if (index > 0) code += "\n\n";
+      
+      code += `public class ${cls.name}\n{\n`;
+      
+      cls.properties.forEach(prop => {
+        const csharpType = prop.isCustomType ? prop.customTypeName : getCSharpType(prop.type);
+        const fieldType = prop.isArray ? `List<${csharpType}>` : csharpType;
+        const optional = prop.isOptional ? "?" : "";
+        code += `    public ${fieldType}${optional} ${toPascalCase(prop.name)} { get; set; }\n`;
+      });
+      
+      code += "}";
     });
     
-    code += "}";
     return code;
   };
 
-  const generateTypeScriptInterface = (properties: JsonProperty[], className: string): string => {
-    let code = `interface ${className} {\n`;
+  const generateTypeScriptInterfaces = (classes: GeneratedClass[]): string => {
+    let code = "";
     
-    properties.forEach(prop => {
-      const tsType = getTypeScriptType(prop.type);
-      const fieldType = prop.isArray ? `${tsType}[]` : tsType;
-      const optional = prop.isOptional ? "?" : "";
-      code += `  ${toCamelCase(prop.name)}${optional}: ${fieldType};\n`;
+    classes.forEach((cls, index) => {
+      if (index > 0) code += "\n\n";
+      
+      code += `interface ${cls.name} {\n`;
+      
+      cls.properties.forEach(prop => {
+        const tsType = prop.isCustomType ? prop.customTypeName : getTypeScriptType(prop.type);
+        const fieldType = prop.isArray ? `${tsType}[]` : tsType;
+        const optional = prop.isOptional ? "?" : "";
+        code += `  ${toCamelCase(prop.name)}${optional}: ${fieldType};\n`;
+      });
+      
+      code += "}";
     });
     
-    code += "}";
     return code;
   };
 
-  const generatePythonClass = (properties: JsonProperty[], className: string): string => {
+  const generatePythonClasses = (classes: GeneratedClass[]): string => {
     let code = "from typing import List, Optional\n\n";
-    code += `class ${className}:\n`;
-    code += `    def __init__(self`;
     
-    // Constructor parameters
-    properties.forEach(prop => {
-      const pythonType = getPythonType(prop.type);
-      const fieldType = prop.isArray ? `List[${pythonType}]` : pythonType;
-      const optional = prop.isOptional ? `Optional[${fieldType}] = None` : fieldType;
-      code += `, ${toSnakeCase(prop.name)}: ${optional}`;
-    });
-    
-    code += "):\n";
-    
-    // Constructor body
-    properties.forEach(prop => {
-      const fieldName = toSnakeCase(prop.name);
-      code += `        self.${fieldName} = ${fieldName}\n`;
+    classes.forEach((cls, index) => {
+      if (index > 0) code += "\n\n";
+      
+      code += `class ${cls.name}:\n`;
+      code += `    def __init__(self`;
+      
+      // Constructor parameters
+      cls.properties.forEach(prop => {
+        const pythonType = prop.isCustomType ? prop.customTypeName : getPythonType(prop.type);
+        const fieldType = prop.isArray ? `List[${pythonType}]` : pythonType;
+        const optional = prop.isOptional ? `Optional[${fieldType}] = None` : fieldType;
+        code += `, ${toSnakeCase(prop.name)}: ${optional}`;
+      });
+      
+      code += "):\n";
+      
+      // Constructor body
+      cls.properties.forEach(prop => {
+        const fieldName = toSnakeCase(prop.name);
+        code += `        self.${fieldName} = ${fieldName}\n`;
+      });
     });
     
     return code;
   };
 
-  const generateGoStruct = (properties: JsonProperty[], className: string): string => {
-    let code = `type ${className} struct {\n`;
+  const generateGoStructs = (classes: GeneratedClass[]): string => {
+    let code = "";
     
-    properties.forEach(prop => {
-      const goType = getGoType(prop.type);
-      const fieldType = prop.isArray ? `[]${goType}` : goType;
-      const pointer = prop.isOptional ? "*" : "";
-      code += `    ${toPascalCase(prop.name)} ${pointer}${fieldType} \`json:"${prop.name}"\`\n`;
+    classes.forEach((cls, index) => {
+      if (index > 0) code += "\n\n";
+      
+      code += `type ${cls.name} struct {\n`;
+      
+      cls.properties.forEach(prop => {
+        const goType = prop.isCustomType ? prop.customTypeName : getGoType(prop.type);
+        const fieldType = prop.isArray ? `[]${goType}` : goType;
+        const pointer = prop.isOptional ? "*" : "";
+        code += `    ${toPascalCase(prop.name)} ${pointer}${fieldType} \`json:"${prop.name}"\`\n`;
+      });
+      
+      code += "}";
     });
     
-    code += "}";
     return code;
   };
 
@@ -265,25 +356,25 @@ const JsonToEntity = () => {
     
     try {
       const jsonObj = JSON.parse(jsonInput);
-      const properties = analyzeJson(jsonObj);
+      const classes = analyzeJsonRecursively(jsonObj, className);
       
       let generatedCode = "";
       
       switch (language) {
         case "java":
-          generatedCode = generateJavaClass(properties, className);
+          generatedCode = generateJavaClasses(classes);
           break;
         case "csharp":
-          generatedCode = generateCSharpClass(properties, className);
+          generatedCode = generateCSharpClasses(classes);
           break;
         case "typescript":
-          generatedCode = generateTypeScriptInterface(properties, className);
+          generatedCode = generateTypeScriptInterfaces(classes);
           break;
         case "python":
-          generatedCode = generatePythonClass(properties, className);
+          generatedCode = generatePythonClasses(classes);
           break;
         case "go":
-          generatedCode = generateGoStruct(properties, className);
+          generatedCode = generateGoStructs(classes);
           break;
         default:
           generatedCode = "不支持的语言";
@@ -293,7 +384,7 @@ const JsonToEntity = () => {
       
       toast({
         title: "成功",
-        description: "代码生成完成",
+        description: `代码生成完成，共生成 ${classes.length} 个类/接口`,
       });
     } catch (error) {
       toast({
@@ -369,19 +460,41 @@ const JsonToEntity = () => {
   "address": {
     "street": "123 Main St",
     "city": "New York",
-    "zipCode": "10001"
+    "zipCode": "10001",
+    "country": {
+      "name": "United States",
+      "code": "US"
+    }
   },
   "hobbies": ["reading", "swimming", "coding"],
   "scores": [95, 87, 92],
+  "contacts": [
+    {
+      "type": "phone",
+      "value": "+1-555-0123"
+    },
+    {
+      "type": "email",
+      "value": "john@work.com"
+    }
+  ],
+  "preferences": {
+    "theme": "dark",
+    "notifications": {
+      "email": true,
+      "sms": false,
+      "push": true
+    }
+  },
   "metadata": null
 }`;
 
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">JSON转实体类</h1>
+        <h1 className="text-3xl font-bold">JSON转实体类（增强版）</h1>
         <p className="text-muted-foreground">
-          将JSON数据转换为多种编程语言的实体类代码，支持Java、C#、TypeScript、Python、Go等
+          将JSON数据转换为多种编程语言的实体类代码，支持多层嵌套对象和数组，自动生成对应的类结构
         </p>
       </div>
 
@@ -391,7 +504,7 @@ const JsonToEntity = () => {
           <CardHeader>
             <CardTitle>JSON输入</CardTitle>
             <CardDescription>
-              粘贴或输入您的JSON数据
+              粘贴或输入您的JSON数据，支持多层嵌套结构
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -431,7 +544,7 @@ const JsonToEntity = () => {
           <CardHeader>
             <CardTitle>生成配置</CardTitle>
             <CardDescription>
-              选择目标语言和类名
+              选择目标语言和主类名
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -453,12 +566,12 @@ const JsonToEntity = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="class-name">类名</Label>
+                <Label htmlFor="class-name">主类名</Label>
                 <Input
                   id="class-name"
                   value={className}
                   onChange={(e) => setClassName(e.target.value)}
-                  placeholder="输入类名"
+                  placeholder="输入主类名"
                 />
               </div>
             </div>
@@ -482,7 +595,7 @@ const JsonToEntity = () => {
               <div>
                 <CardTitle>生成的代码</CardTitle>
                 <CardDescription>
-                  {language.charAt(0).toUpperCase() + language.slice(1)} 实体类代码
+                  {language.charAt(0).toUpperCase() + language.slice(1)} 实体类代码（支持多层嵌套）
                 </CardDescription>
               </div>
               <div className="flex gap-2">
@@ -525,15 +638,25 @@ const JsonToEntity = () => {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">功能特性</h4>
+              <h4 className="font-semibold mb-2">增强功能特性</h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• 自动类型推断</li>
-                <li>• 数组类型支持</li>
+                <li>• 多层嵌套对象支持</li>
+                <li>• 自动生成嵌套类</li>
+                <li>• 对象数组类型处理</li>
+                <li>• 智能类名生成</li>
+                <li>• 完整的类型推断</li>
                 <li>• 可选字段处理</li>
                 <li>• 命名规范转换</li>
-                <li>• 代码格式化</li>
               </ul>
             </div>
+          </div>
+          <div className="mt-4 p-4 bg-muted rounded-lg">
+            <h4 className="font-semibold mb-2">新增功能说明</h4>
+            <p className="text-sm text-muted-foreground">
+              本增强版本支持多层JSON嵌套结构，会自动为每个嵌套对象生成对应的类或接口。
+              例如，如果JSON中包含 address.country 这样的嵌套结构，会自动生成 Address 和 Country 两个类。
+              对于对象数组，也会自动识别并生成相应的类型定义。
+            </p>
           </div>
         </CardContent>
       </Card>

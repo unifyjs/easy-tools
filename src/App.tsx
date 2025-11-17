@@ -49,6 +49,8 @@ import CodeConverter from "./pages/tools/CodeConverter";
 import CodeStats from "./pages/tools/CodeStats";
 import CommentGenerator from "./pages/tools/CommentGenerator";
 import JsonToEntity from "./pages/tools/JsonToEntity";
+import JsonToYaml from "./pages/tools/JsonToYaml";
+import JsonToCsv from "./pages/tools/JsonToCsv";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +77,8 @@ const App = () => (
               <Route path="/tools/ascii-encoder" element={<AsciiEncoder />} />
               
               {/* 代码工具 */}
+              <Route path="/tools/json-yaml" element={<JsonToYaml />} />
+              <Route path="/tools/json-csv" element={<JsonToCsv />} />
               <Route path="/tools/code-formatter" element={<CodeFormatter />} />
               <Route path="/tools/json-viewer" element={<JsonViewer />} />
               <Route path="/tools/sql-formatter" element={<SqlFormatter />} />
