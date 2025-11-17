@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Copy, Download, RefreshCw, ArrowLeftRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const CsvToJson = () => {
+const JsonToCsv = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [mode, setMode] = useState<"csv-to-json" | "json-to-csv">("json-to-csv");
@@ -384,4 +384,4 @@ Bob Johnson,35,Chicago,true`;
   );
 };
 
-export default CsvToJson;
+export default JsonToCsv;

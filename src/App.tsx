@@ -51,6 +51,12 @@ import CommentGenerator from "./pages/tools/CommentGenerator";
 import JsonToEntity from "./pages/tools/JsonToEntity";
 import JsonToYaml from "./pages/tools/JsonToYaml";
 import JsonToCsv from "./pages/tools/JsonToCsv";
+import CountdownTimer from "./pages/tools/CountdownTimer";
+import DateCalculator from "./pages/tools/DateCalculator";
+import DateFormatter from "./pages/tools/DateFormatter";
+import DateValidator from "./pages/tools/DateValidator";
+import TimezoneConverter from "./pages/tools/TimezoneConverter";
+import WorkdayCalculator from "./pages/tools/WorkdayCalculator";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +108,14 @@ const App = () => (
               <Route path="/tools/color-converter" element={<ColorConverter />} />
               <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
               <Route path="/tools/number-base-converter" element={<NumberBaseConverter />} />
+              
+              {/* 日期时间工具 */}
+              <Route path="/tools/countdown-timer" element={<CountdownTimer />} />
+              <Route path="/tools/date-calculator" element={<DateCalculator />} />
+              <Route path="/tools/date-formatter" element={<DateFormatter />} />
+              <Route path="/tools/date-validator" element={<DateValidator />} />
+              <Route path="/tools/timezone-converter" element={<TimezoneConverter />} />
+              <Route path="/tools/workday-calculator" element={<WorkdayCalculator />} />
               
               {/* 生成工具 */}
               <Route path="/tools/qr-generator" element={<QrGenerator />} />
