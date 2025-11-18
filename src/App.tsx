@@ -74,6 +74,9 @@ import DnsLookup from "./pages/tools/network/DnsLookup";
 import PortScanner from "./pages/tools/network/PortScanner";
 import WhoisLookup from "./pages/tools/network/WhoisLookup";
 
+// AI工具导入
+import AIToolNavigator from "./pages/tools/ai/AIToolNavigator";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -152,6 +155,9 @@ const App = () => (
               <Route path="/tools/dns-lookup" element={<DnsLookup />} />
               <Route path="/tools/port-scanner" element={<PortScanner />} />
               <Route path="/tools/whois-lookup" element={<WhoisLookup />} />
+              
+              {/* AI工具 */}
+              <Route path="/tools/ai-tool-navigator" element={<AIToolNavigator />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

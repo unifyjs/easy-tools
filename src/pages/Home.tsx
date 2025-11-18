@@ -40,7 +40,7 @@ const Home = () => {
         </h2>
         <p className="text-gray-600">
           {selectedCategory === 'all' 
-            ? `发现 ${allTools.length} 个实用的开发工具，提高您的工作效率`
+            ? `发现 ${allTools.length} 个实用的开发工具，提高您的工作效率，包含新增AI工具导航`
             : `${filteredTools.length} 个${toolCategories.find(cat => cat.id === selectedCategory)?.name}工具`
           }
         </p>
