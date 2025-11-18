@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Copy, Palette, RefreshCw } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Copy, Palette, RefreshCw, Pipette } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ColorValues {
@@ -24,7 +25,28 @@ const ColorConverter = () => {
     cmyk: { c: 0, m: 66, y: 80, k: 0 }
   });
   const [inputType, setInputType] = useState<'hex' | 'rgb' | 'hsl' | 'hsv' | 'cmyk'>('hex');
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [hue, setHue] = useState(11);
+  const [saturation, setSaturation] = useState(100);
+  const [lightness, setLightness] = useState(60);
+  const [customColor, setCustomColor] = useState('#FF5733');
   const { toast } = useToast();
+
+  // 常用颜色
+  const commonColors = [
+    '#FF0000', '#FF8000', '#FFFF00', '#80FF00', '#00FF00', '#00FF80', '#00FFFF', '#0080FF', '#0000FF',
+    '#8000FF', '#FF00FF', '#FF0080', '#800000', '#804000', '#808000', '#408000', '#008000', '#008040',
+    '#008080', '#004080', '#000080', '#400080', '#800080', '#800040', '#000000', '#404040', '#808080'
+  ];
+
+  // 同步颜色选择器状态
+  useEffect(() => {
+    const hsl = rgbToHsl(colorValues.rgb.r, colorValues.rgb.g, colorValues.rgb.b);
+    setHue(hsl.h);
+    setSaturation(hsl.s);
+    setLightness(hsl.l);
+    setCustomColor(colorValues.hex);
+  }, [colorValues]);
 
   // 颜色转换函数
   const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
@@ -290,10 +312,132 @@ const ColorConverter = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-4">
-              <div 
-                className="w-32 h-32 rounded-lg border-2 border-gray-200 shadow-lg"
-                style={{ backgroundColor: colorValues.hex }}
-              />
+              <div className="relative">
+                <div 
+                  className="w-32 h-32 rounded-lg border-2 border-gray-200 shadow-lg cursor-pointer hover:border-gray-300 transition-colors"
+                  style={{ backgroundColor: colorValues.hex }}
+                  onClick={() => setShowColorPicker(true)}
+                />
+                <Popover open={showColorPicker} onOpenChange={setShowColorPicker}>
+                  {/* <PopoverTrigger asChild>
+                    <button className="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/30 hover:border-white/50 transition-colors overflow-hidden relative">
+                      <div className="w-full h-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 to-purple-500"></div>
+                      <Pipette className="absolute inset-0 w-4 h-4 m-auto text-white drop-shadow-lg" />
+                    </button>
+                  </PopoverTrigger> */}
+                  <PopoverContent className="w-80 p-4 bg-slate-800 border-white/20" side="bottom" align="start">
+                    <div className="space-y-4">
+                      {/* 色相/饱和度选择区域 */}
+                      <div className="relative w-full h-40 rounded-lg overflow-hidden cursor-crosshair"
+                           style={{
+                             background: `linear-gradient(to right, white, hsl(${hue}, 100%, 50%)), linear-gradient(to top, black, transparent)`
+                           }}
+                           onClick={(e) => {
+                             const rect = e.currentTarget.getBoundingClientRect();
+                             const x = e.clientX - rect.left;
+                             const y = e.clientY - rect.top;
+                             const newSaturation = Math.round((x / rect.width) * 100);
+                             const newLightness = Math.round(100 - (y / rect.height) * 100);
+                             setSaturation(newSaturation);
+                             setLightness(newLightness);
+                             const newColor = `hsl(${hue}, ${newSaturation}%, ${newLightness}%)`;
+                             setCustomColor(newColor);
+                             // 转换为RGB并更新所有颜色值
+                             const rgb = hslToRgb(hue, newSaturation, newLightness);
+                             updateAllFromRgb(rgb);
+                           }}>
+                        <div className="absolute w-3 h-3 border-2 border-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
+                             style={{
+                               left: `${saturation}%`,
+                               top: `${100 - lightness}%`
+                             }}></div>
+                      </div>
+                      {/* 色相条 */}
+                      <div className="relative w-full h-4 rounded cursor-pointer"
+                           style={{
+                             background: 'linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)'
+                           }}
+                           onClick={(e) => {
+                             const rect = e.currentTarget.getBoundingClientRect();
+                             const x = e.clientX - rect.left;
+                             const newHue = Math.round((x / rect.width) * 360);
+                             setHue(newHue);
+                             const newColor = `hsl(${newHue}, ${saturation}%, ${lightness}%)`;
+                             setCustomColor(newColor);
+                             // 转换为RGB并更新所有颜色值
+                             const rgb = hslToRgb(newHue, saturation, lightness);
+                             updateAllFromRgb(rgb);
+                           }}>
+                        <div className="absolute w-3 h-6 border-2 border-white rounded transform -translate-x-1/2 -translate-y-1/2 top-1/2"
+                             style={{ left: `${(hue / 360) * 100}%` }}></div>
+                      </div>
+                      {/* 常用颜色 */}
+                      <div className="grid grid-cols-9 gap-1">
+                        {commonColors.map((color, index) => (
+                          <button
+                            key={index}
+                            className="w-6 h-6 rounded border border-white/20 hover:scale-110 transition-transform"
+                            style={{ backgroundColor: color }}
+                            onClick={() => {
+                              setCustomColor(color);
+                              const rgb = hexToRgb(color);
+                              if (rgb) {
+                                updateAllFromRgb(rgb);
+                                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                                setHue(hsl.h);
+                                setSaturation(hsl.s);
+                                setLightness(hsl.l);
+                              }
+                              setShowColorPicker(false);
+                            }}
+                          />
+                        ))}
+                      </div>
+                      {/* 颜色输入框 */}
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="text"
+                          value={customColor}
+                          onChange={(e) => {
+                            setCustomColor(e.target.value);
+                            if (e.target.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+                              const rgb = hexToRgb(e.target.value);
+                              if (rgb) {
+                                updateAllFromRgb(rgb);
+                                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                                setHue(hsl.h);
+                                setSaturation(hsl.s);
+                                setLightness(hsl.l);
+                              }
+                            }
+                          }}
+                          className="flex-1 h-8 bg-white/10 border-white/20 text-white text-xs"
+                          placeholder="#ffffff"
+                        />
+                        <Button
+                          size="sm"
+                          className="h-8 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                          onClick={() => {
+                            if (customColor.match(/^#[0-9A-Fa-f]{6}$/)) {
+                              const rgb = hexToRgb(customColor);
+                              if (rgb) {
+                                updateAllFromRgb(rgb);
+                                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                                setHue(hsl.h);
+                                setSaturation(hsl.s);
+                                setLightness(hsl.l);
+                              }
+                            }
+                            setShowColorPicker(false);
+                          }}
+                        >
+                          确定
+                        </Button>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <div className="flex-1">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
