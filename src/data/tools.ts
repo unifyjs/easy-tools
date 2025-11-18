@@ -317,7 +317,7 @@ export const toolCategories: ToolCategory[] = [
       {
         id: 'qr-generator',
         name: '二维码生成',
-        description: '生成各种类型的二维码，支持自定义样式',
+        description: '支持Logo嵌入和多种美化效果的专业二维码生成工具',
         category: 'generator-tools',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3H8V8H3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 3H21V8H16V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16H8V21H3V16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10H14V14H10V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16H21V21H16V16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       },
