@@ -57,6 +57,7 @@ import WorkdayCalculator from "./pages/tools/datetime/WorkdayCalculator";
 
 // 生成工具导入
 import QrGenerator from "./pages/tools/generator/QrGenerator";
+import QrDecoder from "./pages/tools/generator/QrDecoder";
 import PasswordGenerator from "./pages/tools/generator/PasswordGenerator";
 import UuidGenerator from "./pages/tools/generator/UuidGenerator";
 import LoremGenerator from "./pages/tools/generator/LoremGenerator";
@@ -135,6 +136,7 @@ const App = () => (
               
               {/* 生成工具 */}
               <Route path="/tools/qr-generator" element={<QrGenerator />} />
+              <Route path="/tools/qr-decoder" element={<QrDecoder />} />
               <Route path="/tools/password-generator" element={<PasswordGenerator />} />
               <Route path="/tools/uuid-generator" element={<UuidGenerator />} />
               <Route path="/tools/lorem-generator" element={<LoremGenerator />} />
