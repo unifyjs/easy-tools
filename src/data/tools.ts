@@ -70,7 +70,7 @@ export const toolCategories: ToolCategory[] = [
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       },
       {
-        id: 'asscii-encoder',
+        id: 'ascii-encoder',
         name: 'ASCII编解码',
         description: 'ASCII码与字符的相互转换，支持多种进制格式',
         category: 'endecode-tools',
