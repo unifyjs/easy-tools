@@ -35,11 +35,11 @@ export const toolCategories: ToolCategory[] = [
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       },
       {
-        id: 'html-encoder',
-        name: 'HTML编解码',
-        description: 'HTML实体字符编码和解码工具，处理HTML中的特殊字符',
+        id: 'aes-encryption',
+        name: 'AES加密解密',
+        description: 'AES高级加密标准，支持CBC、CFB、CTR、OFB、ECB模式和多种填充方式',
         category: 'endecode-tools',
-        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 11V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>'
       },
       {
         id: 'unicode-encoder',
@@ -70,16 +70,23 @@ export const toolCategories: ToolCategory[] = [
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       },
       {
-        id: 'jwt-encoder',
-        name: 'JWT解码',
-        description: 'JWT Token解析和验证工具，查看Token的Header、Payload和签名信息',
+        id: 'asscii-encoder',
+        name: 'ASCII编解码',
+        description: 'ASCII码与字符的相互转换，支持多种进制格式',
         category: 'endecode-tools',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       },
       {
-        id: 'asscii-encoder',
-        name: 'ASCII编解码',
-        description: 'ASCII码与字符的相互转换，支持多种进制格式',
+        id: 'html-encoder',
+        name: 'HTML编解码',
+        description: 'HTML实体字符编码和解码工具，处理HTML中的特殊字符',
+        category: 'endecode-tools',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      },
+      {
+        id: 'jwt-encoder',
+        name: 'JWT解码',
+        description: 'JWT Token解析和验证工具，查看Token的Header、Payload和签名信息',
         category: 'endecode-tools',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6H6A2 2 0 0 0 4 8V18A2 2 0 0 0 6 20H14A2 2 0 0 0 16 18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4H20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       }

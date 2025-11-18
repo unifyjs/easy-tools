@@ -57,6 +57,7 @@ import DateFormatter from "./pages/tools/DateFormatter";
 import DateValidator from "./pages/tools/DateValidator";
 import TimezoneConverter from "./pages/tools/TimezoneConverter";
 import WorkdayCalculator from "./pages/tools/WorkdayCalculator";
+import AesEncryption from "./pages/tools/AesEncryption";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +82,7 @@ const App = () => (
               <Route path="/tools/sha-encoder" element={<ShaHash />} />
               <Route path="/tools/jwt-encoder" element={<JwtDecoder />} />
               <Route path="/tools/ascii-encoder" element={<AsciiEncoder />} />
+              <Route path="/tools/aes-encryption" element={<AesEncryption />} />
               
               {/* 代码工具 */}
               <Route path="/tools/json-yaml" element={<JsonToYaml />} />
