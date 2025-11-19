@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -127,6 +128,8 @@ const CssFormatter = () => {
   const stats = inputCss ? analyzeCss(inputCss) : null;
 
   return (
+    <>
+      <SEOHead toolId="css-formatter" />
     <div className="container mx-auto p-6 max-w-6xl">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">CSS美化器</h1>
@@ -270,6 +273,7 @@ const CssFormatter = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

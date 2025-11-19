@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
@@ -238,6 +239,8 @@ const ImageCompressor = () => {
   }, [images]);
 
   return (
+    <>
+      <SEOHead toolId="image-compressor" />
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
         {/* 页面标题 */}
@@ -528,6 +531,7 @@ const ImageCompressor = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

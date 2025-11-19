@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -167,6 +168,8 @@ const HtmlEncoder = () => {
   };
 
   return (
+    <>
+      <SEOHead toolId="html-encoder" />
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
         {/* 页面标题 */}
@@ -334,6 +337,7 @@ const HtmlEncoder = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

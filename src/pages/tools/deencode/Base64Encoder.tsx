@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -92,7 +93,9 @@ const Base64Encoder = () => {
   };
 
   return (
-    <div className="p-6">
+    <>
+      <SEOHead toolId="base64-encoder" />
+      <div className="p-6">
       <div className="max-w-4xl mx-auto">
         {/* 头部 */}
 
@@ -216,6 +219,7 @@ const Base64Encoder = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -128,6 +129,8 @@ const TimezoneConverter = () => {
   };
 
   return (
+    <>
+      <SEOHead toolId="timezone-converter" />
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
         <Card className="mb-6">
@@ -212,6 +215,7 @@ const TimezoneConverter = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -479,6 +480,8 @@ END:VCARD`;
   ];
 
   return (
+    <>
+      <SEOHead toolId="qr-generator" />
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6">
@@ -1096,6 +1099,7 @@ END:VCARD`;
         </div>
       </div>
     </div>
+    </>
   );
 };
 

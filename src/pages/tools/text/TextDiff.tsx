@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -80,12 +81,15 @@ const TextDiff = () => {
   // 渲染差异结果
   const renderDiffResult = () => {
     if (diffResult.length === 0) {
-      return (
+  return (
+    <>
+      <SEOHead toolId="text-diff" />
         <div className="text-center py-12 text-gray-500">
           <GitCompare className="w-12 h-12 mx-auto mb-4 opacity-50" />
           <p>请输入要比较的文本内容</p>
         </div>
-      );
+    </>
+  );
     }
 
     return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -308,6 +309,8 @@ const ApiTester = () => {
   };
 
   return (
+    <>
+      <SEOHead toolId="apitester" />
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">API测试工具</h1>
@@ -674,6 +677,7 @@ const ApiTester = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

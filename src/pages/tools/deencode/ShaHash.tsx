@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +17,7 @@ const ShaHash = () => {
   // SHA-1 implementation
   const sha1 = (str: string): string => {
     const rotateLeft = (n: number, s: number): number => {
-      return (n << s) | (n >>> (32 - s));
+  return (n << s) | (n >>> (32 - s));
     };
 
     const cvtHex = (val: number): string => {
@@ -644,6 +645,8 @@ const ShaHash = () => {
   ];
 
   return (
+  <>
+      <SEOHead toolId="sha-encoder" />
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
         {/* 页面标题 */}
@@ -857,6 +860,7 @@ const ShaHash = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

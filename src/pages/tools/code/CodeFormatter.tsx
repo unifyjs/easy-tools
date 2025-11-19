@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -342,6 +343,8 @@ const CodeFormatter = () => {
   };
 
   return (
+    <>
+      <SEOHead toolId="code-formatter" />
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
         {/* 页面标题 */}
@@ -529,6 +532,7 @@ const CodeFormatter = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

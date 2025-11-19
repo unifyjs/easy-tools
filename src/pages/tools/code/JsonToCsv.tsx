@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -236,6 +237,8 @@ Bob Johnson,35,Chicago,true`;
 ]`;
 
   return (
+    <>
+      <SEOHead toolId="json-csv" />
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">JSON ⇄ CSV 转换器</h1>
@@ -381,6 +384,7 @@ Bob Johnson,35,Chicago,true`;
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -66,7 +67,9 @@ const AIToolNavigator: React.FC = () => {
   );
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <>
+      <SEOHead toolId="ai-tool-navigator" />
+      <div className="container mx-auto p-6 max-w-7xl">
       {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-2 mb-4">
@@ -176,6 +179,7 @@ const AIToolNavigator: React.FC = () => {
         </div>
       </div> */}
     </div>
+    </>
   );
 };
 

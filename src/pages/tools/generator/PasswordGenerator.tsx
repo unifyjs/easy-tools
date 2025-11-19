@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -244,6 +245,8 @@ const PasswordGenerator = () => {
   ];
 
   return (
+    <>
+      <SEOHead toolId="password-generator" />
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -569,6 +572,7 @@ const PasswordGenerator = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

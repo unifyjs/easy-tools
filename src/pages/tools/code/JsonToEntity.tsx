@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -490,6 +491,8 @@ const JsonToEntity = () => {
 }`;
 
   return (
+    <>
+      <SEOHead toolId="json-to-entity" />
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">JSON转实体类（增强版）</h1>
@@ -661,6 +664,7 @@ const JsonToEntity = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

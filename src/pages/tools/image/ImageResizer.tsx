@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -221,270 +222,273 @@ const ImageResizer = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* 页面标题 */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Maximize2 className="w-8 h-8 text-purple-400" />
-            <h1 className="text-3xl font-bold">图片尺寸调整</h1>
+    <>
+      <SEOHead toolId="image-resizer" />
+      <div className="p-6">
+        <div className="max-w-6xl mx-auto">
+          {/* 页面标题 */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <Maximize2 className="w-8 h-8 text-purple-400" />
+              <h1 className="text-3xl font-bold">图片尺寸调整</h1>
+            </div>
+            <p className="text-gray-600">调整图片尺寸、分辨率，支持按比例缩放和自定义尺寸</p>
+            <Badge variant="secondary" className="mt-2">图像工具</Badge>
           </div>
-          <p className="text-gray-600">调整图片尺寸、分辨率，支持按比例缩放和自定义尺寸</p>
-          <Badge variant="secondary" className="mt-2">图像工具</Badge>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 上传区域 */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="w-5 h-5" />
-                上传图片
-              </CardTitle>
-              <CardDescription>
-                支持 JPG、PNG、GIF、WebP 等格式
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                {previewUrl ? (
-                  <div className="space-y-4">
-                    <img
-                      src={previewUrl}
-                      alt="预览"
-                      className="max-w-full max-h-32 mx-auto rounded-lg shadow-md"
-                    />
-                    <div className="text-sm text-gray-600">
-                      <p className="font-medium">{selectedFile?.name}</p>
-                      <p>{formatFileSize(selectedFile?.size || 0)}</p>
-                      {originalDimensions && (
-                        <p>{originalDimensions.width} x {originalDimensions.height} px</p>
-                      )}
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        clearFiles();
-                      }}
-                    >
-                      <X className="w-4 h-4 mr-2" />
-                      清除
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <ImageIcon className="w-12 h-12 text-gray-400 mx-auto" />
-                    <div>
-                      <p className="text-lg font-medium text-gray-700">点击或拖拽上传图片</p>
-                      <p className="text-sm text-gray-500 mt-1">支持多种图片格式</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 调整设置 */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Maximize2 className="w-5 h-5" />
-                尺寸设置
-              </CardTitle>
-              <CardDescription>
-                设置新的图片尺寸和缩放参数
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* 调整模式 */}
-              <div>
-                <Label className="text-sm font-medium mb-2 block">调整模式</Label>
-                <Select value={resizeMode} onValueChange={(value: 'pixels' | 'percentage') => setResizeMode(value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pixels">像素尺寸</SelectItem>
-                    <SelectItem value="percentage">百分比缩放</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {resizeMode === 'percentage' ? (
-                <div>
-                  <Label htmlFor="percentage" className="text-sm font-medium mb-2 block">
-                    缩放百分比 (%)
-                  </Label>
-                  <Input
-                    id="percentage"
-                    type="number"
-                    value={percentage}
-                    onChange={(e) => handlePercentageChange(e.target.value)}
-                    placeholder="100"
-                    min="1"
-                    max="1000"
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 上传区域 */}
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Upload className="w-5 h-5" />
+                  上传图片
+                </CardTitle>
+                <CardDescription>
+                  支持 JPG、PNG、GIF、WebP 等格式
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
                   />
+                  {previewUrl ? (
+                    <div className="space-y-4">
+                      <img
+                        src={previewUrl}
+                        alt="预览"
+                        className="max-w-full max-h-32 mx-auto rounded-lg shadow-md"
+                      />
+                      <div className="text-sm text-gray-600">
+                        <p className="font-medium">{selectedFile?.name}</p>
+                        <p>{formatFileSize(selectedFile?.size || 0)}</p>
+                        {originalDimensions && (
+                          <p>{originalDimensions.width} x {originalDimensions.height} px</p>
+                        )}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          clearFiles();
+                        }}
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        清除
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <ImageIcon className="w-12 h-12 text-gray-400 mx-auto" />
+                      <div>
+                        <p className="text-lg font-medium text-gray-700">点击或拖拽上传图片</p>
+                        <p className="text-sm text-gray-500 mt-1">支持多种图片格式</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-4">
+              </CardContent>
+            </Card>
+
+            {/* 调整设置 */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Maximize2 className="w-5 h-5" />
+                  尺寸设置
+                </CardTitle>
+                <CardDescription>
+                  设置新的图片尺寸和缩放参数
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* 调整模式 */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">调整模式</Label>
+                  <Select value={resizeMode} onValueChange={(value: 'pixels' | 'percentage') => setResizeMode(value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pixels">像素尺寸</SelectItem>
+                      <SelectItem value="percentage">百分比缩放</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {resizeMode === 'percentage' ? (
                   <div>
-                    <Label htmlFor="width" className="text-sm font-medium mb-2 block">
-                      宽度 (px)
+                    <Label htmlFor="percentage" className="text-sm font-medium mb-2 block">
+                      缩放百分比 (%)
                     </Label>
                     <Input
-                      id="width"
+                      id="percentage"
                       type="number"
-                      value={targetWidth}
-                      onChange={(e) => handleWidthChange(e.target.value)}
-                      placeholder="宽度"
+                      value={percentage}
+                      onChange={(e) => handlePercentageChange(e.target.value)}
+                      placeholder="100"
                       min="1"
+                      max="1000"
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="height" className="text-sm font-medium mb-2 block">
-                      高度 (px)
-                    </Label>
-                    <Input
-                      id="height"
-                      type="number"
-                      value={targetHeight}
-                      onChange={(e) => handleHeightChange(e.target.value)}
-                      placeholder="高度"
-                      min="1"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* 保持纵横比 */}
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="aspect-ratio"
-                  checked={maintainAspectRatio}
-                  onCheckedChange={setMaintainAspectRatio}
-                />
-                <Label htmlFor="aspect-ratio" className="flex items-center gap-2">
-                  {maintainAspectRatio ? <Link className="w-4 h-4" /> : <Unlink className="w-4 h-4" />}
-                  保持纵横比
-                </Label>
-              </div>
-
-              {/* 预设尺寸 */}
-              <div>
-                <Label className="text-sm font-medium mb-2 block">常用尺寸</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {presetSizes.map((preset, index) => (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => applyPresetSize(preset)}
-                      className="text-xs"
-                    >
-                      {preset.name}
-                      <br />
-                      <span className="text-gray-500">{preset.width}x{preset.height}</span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              <Button
-                onClick={resizeImage}
-                disabled={!selectedFile || !targetWidth || !targetHeight || isResizing}
-                className="w-full"
-              >
-                {isResizing ? (
-                  <>
-                    <Maximize2 className="w-4 h-4 mr-2 animate-pulse" />
-                    调整中...
-                  </>
                 ) : (
-                  <>
-                    <Maximize2 className="w-4 h-4 mr-2" />
-                    开始调整
-                  </>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="width" className="text-sm font-medium mb-2 block">
+                        宽度 (px)
+                      </Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={targetWidth}
+                        onChange={(e) => handleWidthChange(e.target.value)}
+                        placeholder="宽度"
+                        min="1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="height" className="text-sm font-medium mb-2 block">
+                        高度 (px)
+                      </Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        value={targetHeight}
+                        onChange={(e) => handleHeightChange(e.target.value)}
+                        placeholder="高度"
+                        min="1"
+                      />
+                    </div>
+                  </div>
                 )}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
 
-        {/* 调整结果 */}
-        {resizedImage && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Download className="w-5 h-5" />
-                调整结果
-              </CardTitle>
-              <CardDescription>
-                尺寸调整完成，可以下载新图片
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 保持纵横比 */}
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="aspect-ratio"
+                    checked={maintainAspectRatio}
+                    onCheckedChange={setMaintainAspectRatio}
+                  />
+                  <Label htmlFor="aspect-ratio" className="flex items-center gap-2">
+                    {maintainAspectRatio ? <Link className="w-4 h-4" /> : <Unlink className="w-4 h-4" />}
+                    保持纵横比
+                  </Label>
+                </div>
+
+                {/* 预设尺寸 */}
                 <div>
-                  <h4 className="font-medium mb-2">原图片</h4>
-                  <div className="border rounded-lg p-4">
-                    <img
-                      src={previewUrl}
-                      alt="原图"
-                      className="max-w-full max-h-48 mx-auto rounded"
-                    />
-                    <div className="text-sm text-gray-600 mt-2 text-center">
-                      {originalDimensions && (
-                        <>
-                          <p>尺寸: {originalDimensions.width} x {originalDimensions.height} px</p>
-                          <p>大小: {formatFileSize(selectedFile?.size || 0)}</p>
-                        </>
-                      )}
+                  <Label className="text-sm font-medium mb-2 block">常用尺寸</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {presetSizes.map((preset, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => applyPresetSize(preset)}
+                        className="text-xs"
+                      >
+                        {preset.name}
+                        <br />
+                        <span className="text-gray-500">{preset.width}x{preset.height}</span>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <Button
+                  onClick={resizeImage}
+                  disabled={!selectedFile || !targetWidth || !targetHeight || isResizing}
+                  className="w-full"
+                >
+                  {isResizing ? (
+                    <>
+                      <Maximize2 className="w-4 h-4 mr-2 animate-pulse" />
+                      调整中...
+                    </>
+                  ) : (
+                    <>
+                      <Maximize2 className="w-4 h-4 mr-2" />
+                      开始调整
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* 调整结果 */}
+          {resizedImage && (
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Download className="w-5 h-5" />
+                  调整结果
+                </CardTitle>
+                <CardDescription>
+                  尺寸调整完成，可以下载新图片
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium mb-2">原图片</h4>
+                    <div className="border rounded-lg p-4">
+                      <img
+                        src={previewUrl}
+                        alt="原图"
+                        className="max-w-full max-h-48 mx-auto rounded"
+                      />
+                      <div className="text-sm text-gray-600 mt-2 text-center">
+                        {originalDimensions && (
+                          <>
+                            <p>尺寸: {originalDimensions.width} x {originalDimensions.height} px</p>
+                            <p>大小: {formatFileSize(selectedFile?.size || 0)}</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">调整后</h4>
+                    <div className="border rounded-lg p-4">
+                      <img
+                        src={resizedImage.url}
+                        alt="调整后"
+                        className="max-w-full max-h-48 mx-auto rounded"
+                      />
+                      <div className="text-sm text-gray-600 mt-2 text-center">
+                        <p>尺寸: {resizedImage.width} x {resizedImage.height} px</p>
+                        <p>大小: {formatFileSize(resizedImage.size)}</p>
+                        {originalDimensions && (
+                          <p className="text-green-600">
+                            压缩比: {((resizedImage.size / (selectedFile?.size || 1)) * 100).toFixed(1)}%
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div>
-                  <h4 className="font-medium mb-2">调整后</h4>
-                  <div className="border rounded-lg p-4">
-                    <img
-                      src={resizedImage.url}
-                      alt="调整后"
-                      className="max-w-full max-h-48 mx-auto rounded"
-                    />
-                    <div className="text-sm text-gray-600 mt-2 text-center">
-                      <p>尺寸: {resizedImage.width} x {resizedImage.height} px</p>
-                      <p>大小: {formatFileSize(resizedImage.size)}</p>
-                      {originalDimensions && (
-                        <p className="text-green-600">
-                          压缩比: {((resizedImage.size / (selectedFile?.size || 1)) * 100).toFixed(1)}%
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Button onClick={downloadImage} className="w-full mt-4">
-                <Download className="w-4 h-4 mr-2" />
-                下载调整后的图片
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+                <Button onClick={downloadImage} className="w-full mt-4">
+                  <Download className="w-4 h-4 mr-2" />
+                  下载调整后的图片
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -202,6 +203,8 @@ const TimestampConverter = () => {
   };
 
   return (
+  <>
+      <SEOHead toolId="timestamp-converter" />
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
         {/* 页面标题 */}
@@ -504,6 +507,7 @@ const TimestampConverter = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

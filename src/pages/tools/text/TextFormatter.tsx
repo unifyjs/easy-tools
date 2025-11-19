@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -110,7 +111,9 @@ const TextFormatter = () => {
   };
 
   return (
-    <div className="p-6">
+    <>
+      <SEOHead toolId="text-formatter" />
+      <div className="p-6">
       <div className="max-w-4xl mx-auto">
 
         {/* 格式选择 */}
@@ -176,6 +179,7 @@ const TextFormatter = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

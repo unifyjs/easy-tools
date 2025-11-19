@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -418,307 +419,310 @@ const ImageCropper = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="text-center space-y-2">
-        <div className="flex items-center justify-center gap-2">
-          <Crop className="w-8 h-8 text-purple-400" />
-          <h1 className="text-3xl font-bold">图片裁剪工具</h1>
-        </div>
-        <p className="text-muted-foreground">
-          上传图片进行裁剪、旋转、翻转等编辑操作
-        </p>
-      </div>
-
-      {/* 文件上传区域 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Upload className="w-5 h-5" />
-            上传图片
-          </CardTitle>
-          <CardDescription>
-            支持 JPG、PNG、WebP 等格式，可同时上传多张图片
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'
-            }`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          >
-            <ImageIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-lg font-medium mb-2">拖拽图片到此处或点击上传</p>
-            <p className="text-sm text-muted-foreground mb-4">
-              支持 JPG、PNG、WebP 格式
-            </p>
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              variant="outline"
-            >
-              选择文件
-            </Button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              className="hidden"
-              onChange={(e) => handleFileSelect(e.target.files)}
-            />
+    <>
+      <SEOHead toolId="image-cropper" />
+      <div className="container mx-auto p-6 space-y-6">
+        <div className="text-center space-y-2">
+          <div className="flex items-center justify-center gap-2">
+            <Crop className="w-8 h-8 text-purple-400" />
+            <h1 className="text-3xl font-bold">图片裁剪工具</h1>
           </div>
-        </CardContent>
-      </Card>
+          <p className="text-muted-foreground">
+            上传图片进行裁剪、旋转、翻转等编辑操作
+          </p>
+        </div>
 
-      {images.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 图片列表 */}
-          <Card>
-            <CardHeader>
-              <CardTitle>图片列表</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {images.map((image) => (
-                <div
-                  key={image.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    selectedImageId === image.id ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
-                  }`}
-                  onClick={() => setSelectedImageId(image.id)}
-                >
-                  <img
-                    src={image.url}
-                    alt={image.file.name}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{image.file.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {image.naturalWidth} × {image.naturalHeight} • {formatBytes(image.file.size)}
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeImage(image.id);
-                    }}
+        {/* 文件上传区域 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="w-5 h-5" />
+              上传图片
+            </CardTitle>
+            <CardDescription>
+              支持 JPG、PNG、WebP 等格式，可同时上传多张图片
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'
+              }`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+            >
+              <ImageIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+              <p className="text-lg font-medium mb-2">拖拽图片到此处或点击上传</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                支持 JPG、PNG、WebP 格式
+              </p>
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                variant="outline"
+              >
+                选择文件
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => handleFileSelect(e.target.files)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {images.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 图片列表 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>图片列表</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {images.map((image) => (
+                  <div
+                    key={image.id}
+                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                      selectedImageId === image.id ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
+                    }`}
+                    onClick={() => setSelectedImageId(image.id)}
                   >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* 编辑区域 */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>图片编辑</CardTitle>
-              {selectedImage && (
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">
-                    {selectedImage.naturalWidth} × {selectedImage.naturalHeight}
-                  </Badge>
-                  <Badge variant="outline">
-                    {formatBytes(selectedImage.file.size)}
-                  </Badge>
-                </div>
-              )}
-            </CardHeader>
-            <CardContent>
-              {selectedImage ? (
-                <div className="space-y-6">
-                  {/* 工具栏 */}
-                  <div className="flex flex-wrap gap-2">
+                    <img
+                      src={image.url}
+                      alt={image.file.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{image.file.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {image.naturalWidth} × {image.naturalHeight} • {formatBytes(image.file.size)}
+                      </p>
+                    </div>
                     <Button
                       size="sm"
-                      variant="outline"
-                      onClick={() => rotateImage(-90)}
-                    >
-                      <RotateCcw className="w-4 h-4 mr-2" />
-                      左转90°
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => rotateImage(90)}
-                    >
-                      <RotateCw className="w-4 h-4 mr-2" />
-                      右转90°
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => flipImage('x')}
-                    >
-                      <FlipHorizontal className="w-4 h-4 mr-2" />
-                      水平翻转
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => flipImage('y')}
-                    >
-                      <FlipVertical className="w-4 h-4 mr-2" />
-                      垂直翻转
-                    </Button>
-                  </div>
-
-                  {/* 裁剪预览 */}
-                  <div className="relative inline-block border rounded-lg overflow-hidden">
-                    <div
-                      className="relative"
-                      style={{
-                        width: selectedImage.displayWidth,
-                        height: selectedImage.displayHeight,
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeImage(image.id);
                       }}
                     >
-                      <img
-                        ref={imageRef}
-                        src={selectedImage.url}
-                        alt="Preview"
-                        className="block"
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* 编辑区域 */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>图片编辑</CardTitle>
+                {selectedImage && (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">
+                      {selectedImage.naturalWidth} × {selectedImage.naturalHeight}
+                    </Badge>
+                    <Badge variant="outline">
+                      {formatBytes(selectedImage.file.size)}
+                    </Badge>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent>
+                {selectedImage ? (
+                  <div className="space-y-6">
+                    {/* 工具栏 */}
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => rotateImage(-90)}
+                      >
+                        <RotateCcw className="w-4 h-4 mr-2" />
+                        左转90°
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => rotateImage(90)}
+                      >
+                        <RotateCw className="w-4 h-4 mr-2" />
+                        右转90°
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => flipImage('x')}
+                      >
+                        <FlipHorizontal className="w-4 h-4 mr-2" />
+                        水平翻转
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => flipImage('y')}
+                      >
+                        <FlipVertical className="w-4 h-4 mr-2" />
+                        垂直翻转
+                      </Button>
+                    </div>
+
+                    {/* 裁剪预览 */}
+                    <div className="relative inline-block border rounded-lg overflow-hidden">
+                      <div
+                        className="relative"
                         style={{
                           width: selectedImage.displayWidth,
                           height: selectedImage.displayHeight,
-                          transform: `rotate(${selectedImage.rotation}deg) scaleX(${selectedImage.flipX ? -1 : 1}) scaleY(${selectedImage.flipY ? -1 : 1})`,
                         }}
-                        draggable={false}
-                      />
-                      
-                      {/* 裁剪区域 */}
-                      <div
-                        ref={cropAreaRef}
-                        className="absolute border-2 border-primary bg-primary/10 cursor-move"
-                        style={{
-                          left: selectedImage.cropArea.x,
-                          top: selectedImage.cropArea.y,
-                          width: selectedImage.cropArea.width,
-                          height: selectedImage.cropArea.height,
-                        }}
-                        onMouseDown={handleMouseDown}
                       >
-                        {/* 调整手柄 */}
-                        <div
-                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-nw-resize -top-2 -left-2 hover:bg-primary/80 transition-colors z-10"
-                          onMouseDown={(e) => handleMouseDown(e, 'nw')}
+                        <img
+                          ref={imageRef}
+                          src={selectedImage.url}
+                          alt="Preview"
+                          className="block"
+                          style={{
+                            width: selectedImage.displayWidth,
+                            height: selectedImage.displayHeight,
+                            transform: `rotate(${selectedImage.rotation}deg) scaleX(${selectedImage.flipX ? -1 : 1}) scaleY(${selectedImage.flipY ? -1 : 1})`,
+                          }}
+                          draggable={false}
                         />
+                        
+                        {/* 裁剪区域 */}
                         <div
-                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-ne-resize -top-2 -right-2 hover:bg-primary/80 transition-colors z-10"
-                          onMouseDown={(e) => handleMouseDown(e, 'ne')}
-                        />
-                        <div
-                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-sw-resize -bottom-2 -left-2 hover:bg-primary/80 transition-colors z-10"
-                          onMouseDown={(e) => handleMouseDown(e, 'sw')}
-                        />
-                        <div
-                          className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-se-resize -bottom-2 -right-2 hover:bg-primary/80 transition-colors z-10"
-                          onMouseDown={(e) => handleMouseDown(e, 'se')}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 裁剪设置 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-4">
-                      <div>
-                        <Label>宽高比</Label>
-                        <Select value={aspectRatio} onValueChange={handleAspectRatioChange}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ASPECT_RATIOS.map((ratio) => (
-                              <SelectItem key={ratio.value} value={ratio.value}>
-                                {ratio.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <Label>自定义宽度</Label>
-                          <Input
-                            type="number"
-                            placeholder="像素"
-                            value={customWidth}
-                            onChange={(e) => setCustomWidth(e.target.value)}
+                          ref={cropAreaRef}
+                          className="absolute border-2 border-primary bg-primary/10 cursor-move"
+                          style={{
+                            left: selectedImage.cropArea.x,
+                            top: selectedImage.cropArea.y,
+                            width: selectedImage.cropArea.width,
+                            height: selectedImage.cropArea.height,
+                          }}
+                          onMouseDown={handleMouseDown}
+                        >
+                          {/* 调整手柄 */}
+                          <div
+                            className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-nw-resize -top-2 -left-2 hover:bg-primary/80 transition-colors z-10"
+                            onMouseDown={(e) => handleMouseDown(e, 'nw')}
                           />
-                        </div>
-                        <div>
-                          <Label>自定义高度</Label>
-                          <Input
-                            type="number"
-                            placeholder="像素"
-                            value={customHeight}
-                            onChange={(e) => setCustomHeight(e.target.value)}
+                          <div
+                            className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-ne-resize -top-2 -right-2 hover:bg-primary/80 transition-colors z-10"
+                            onMouseDown={(e) => handleMouseDown(e, 'ne')}
+                          />
+                          <div
+                            className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-sw-resize -bottom-2 -left-2 hover:bg-primary/80 transition-colors z-10"
+                            onMouseDown={(e) => handleMouseDown(e, 'sw')}
+                          />
+                          <div
+                            className="absolute w-4 h-4 bg-primary border-2 border-white rounded-full cursor-se-resize -bottom-2 -right-2 hover:bg-primary/80 transition-colors z-10"
+                            onMouseDown={(e) => handleMouseDown(e, 'se')}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div>
-                        <Label>输出格式</Label>
-                        <Select value={outputFormat} onValueChange={setOutputFormat}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="png">PNG</SelectItem>
-                            <SelectItem value="jpeg">JPEG</SelectItem>
-                            <SelectItem value="webp">WebP</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    {/* 裁剪设置 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        <div>
+                          <Label>宽高比</Label>
+                          <Select value={aspectRatio} onValueChange={handleAspectRatioChange}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ASPECT_RATIOS.map((ratio) => (
+                                <SelectItem key={ratio.value} value={ratio.value}>
+                                  {ratio.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <Label>自定义宽度</Label>
+                            <Input
+                              type="number"
+                              placeholder="像素"
+                              value={customWidth}
+                              onChange={(e) => setCustomWidth(e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label>自定义高度</Label>
+                            <Input
+                              type="number"
+                              placeholder="像素"
+                              value={customHeight}
+                              onChange={(e) => setCustomHeight(e.target.value)}
+                            />
+                          </div>
+                        </div>
                       </div>
 
-                      {outputFormat === 'jpeg' && (
+                      <div className="space-y-4">
                         <div>
-                          <Label>JPEG 质量: {outputQuality}%</Label>
-                          <input
-                            type="range"
-                            min="10"
-                            max="100"
-                            value={outputQuality}
-                            onChange={(e) => setOutputQuality(parseInt(e.target.value))}
-                            className="w-full mt-2"
-                          />
+                          <Label>输出格式</Label>
+                          <Select value={outputFormat} onValueChange={setOutputFormat}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="png">PNG</SelectItem>
+                              <SelectItem value="jpeg">JPEG</SelectItem>
+                              <SelectItem value="webp">WebP</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                      )}
+
+                        {outputFormat === 'jpeg' && (
+                          <div>
+                            <Label>JPEG 质量: {outputQuality}%</Label>
+                            <input
+                              type="range"
+                              min="10"
+                              max="100"
+                              value={outputQuality}
+                              onChange={(e) => setOutputQuality(parseInt(e.target.value))}
+                              className="w-full mt-2"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="flex justify-center">
+                      <Button onClick={cropImage} size="lg" className="px-8">
+                        <Download className="w-4 h-4 mr-2" />
+                        裁剪并下载
+                      </Button>
                     </div>
                   </div>
-
-                  <Separator />
-
-                  <div className="flex justify-center">
-                    <Button onClick={cropImage} size="lg" className="px-8">
-                      <Download className="w-4 h-4 mr-2" />
-                      裁剪并下载
-                    </Button>
+                ) : (
+                  <div className="text-center py-12">
+                    <ImageIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+                    <p className="text-lg font-medium">请选择要编辑的图片</p>
+                    <p className="text-muted-foreground">从左侧列表中选择一张图片开始编辑</p>
                   </div>
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <ImageIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-lg font-medium">请选择要编辑的图片</p>
-                  <p className="text-muted-foreground">从左侧列表中选择一张图片开始编辑</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
-      {/* 隐藏的画布用于图片处理 */}
-      <canvas ref={canvasRef} className="hidden" />
-    </div>
+        {/* 隐藏的画布用于图片处理 */}
+        <canvas ref={canvasRef} className="hidden" />
+      </div>
+    </>
   );
 };
 

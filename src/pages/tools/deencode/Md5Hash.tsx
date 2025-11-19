@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +16,7 @@ const Md5Hash = () => {
   // MD5 implementation
   const md5 = (str: string): string => {
     const rotateLeft = (value: number, amount: number): number => {
-      return (value << amount) | (value >>> (32 - amount));
+  return (value << amount) | (value >>> (32 - amount));
     };
 
     const addUnsigned = (x: number, y: number): number => {
@@ -259,6 +260,8 @@ const Md5Hash = () => {
   ];
 
   return (
+    <>
+      <SEOHead toolId="md5-encoder" />
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
         {/* 页面标题 */}
@@ -408,6 +411,7 @@ const Md5Hash = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

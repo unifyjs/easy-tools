@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Copy, Download, RefreshCw, ArrowLeftRight } from "lucide-react";
@@ -249,6 +250,8 @@ address:
   zipCode: "10001"`;
 
   return (
+    <>
+      <SEOHead toolId="json-yaml" />
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">JSON ⇄ YAML 转换器</h1>
@@ -379,6 +382,7 @@ address:
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

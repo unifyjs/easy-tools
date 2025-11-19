@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -188,7 +189,9 @@ const UnitConverter = () => {
   const currentCategory = unitCategories[selectedCategory as keyof typeof unitCategories];
   const units = Object.entries(currentCategory.units);
   
-  return (
+  return ( 
+    <>
+      <SEOHead toolId="unit-converter" />
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
         {/* 页面标题 */}
@@ -372,6 +375,7 @@ const UnitConverter = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

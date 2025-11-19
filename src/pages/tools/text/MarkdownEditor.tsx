@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -190,6 +191,8 @@ function greet(name) {
   };
 
   return (
+    <>
+      <SEOHead toolId="markdown-editor" />
     <div className="p-6">
       <div className="max-w-7xl mx-auto">
         {/* 页面标题 */}
@@ -375,6 +378,7 @@ function greet(name) {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

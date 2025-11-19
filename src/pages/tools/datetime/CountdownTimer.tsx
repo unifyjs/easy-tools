@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -151,7 +152,9 @@ const CountdownTimer = () => {
     return `${time.days}天 ${time.hours}时 ${time.minutes}分 ${time.seconds}秒`;
   };
 
-  return (
+  return (   
+  <>
+      <SEOHead toolId="countdown-timer" />
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
         <Card className="mb-6">
@@ -305,6 +308,7 @@ const CountdownTimer = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
