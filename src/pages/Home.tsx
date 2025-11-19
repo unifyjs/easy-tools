@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -32,7 +33,9 @@ const Home = () => {
   }, [selectedCategory, searchTerm, allTools]);
 
   return (
-    <div className="p-6">
+    <>
+      <SEOHead toolId="home" />
+      <div className="p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {selectedCategory === 'all' ? '所有工具' : 
@@ -104,7 +107,8 @@ const Home = () => {
           <p className="text-gray-600">尝试调整搜索关键词或选择其他分类</p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

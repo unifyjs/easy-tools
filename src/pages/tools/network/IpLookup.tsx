@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -198,7 +199,9 @@ const IpLookup = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <>
+      <SEOHead toolId="ip-lookup" />
+      <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
           <MapPin className="w-8 h-8 text-cyan-400" />
@@ -431,7 +434,8 @@ const IpLookup = () => {
           </Card>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
