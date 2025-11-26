@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { toolCategories, getAllTools } from '@/data/tools';
 import { ThemeToggle } from '@/components/theme-toggle';
+import BackToTop from '@/components/BackToTop';
 import { Search, Home, Wrench, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -134,7 +135,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </SidebarContent>
         </Sidebar>
         
-        <SidebarInset className="flex-1">
+        <SidebarInset className="flex-1 relative">
           <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 bg-white/80 backdrop-blur-sm px-4">
             <SidebarTrigger className="-ml-1" />
             <div className="flex items-center gap-2 flex-1">
@@ -151,9 +152,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </header>
           
-          <main className="flex-1">
+          <main className="flex-1 overflow-auto">
             {children}
           </main>
+          
+          {/* 回到顶部按钮 - 监听main元素的滚动 */}
+          <BackToTop 
+            threshold={300}
+            position="bottom-right"
+          />
         </SidebarInset>
       </div>
     </SidebarProvider>

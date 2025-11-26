@@ -382,3 +382,31 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* 回到顶部按钮样式优化 */
+.back-to-top-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.back-to-top-button:hover {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+/* 确保主内容区域可以滚动 */
+#main-content {
+  height: calc(100vh - 4rem); /* 减去header高度 */
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* 隐藏滚动条但保持功能 */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

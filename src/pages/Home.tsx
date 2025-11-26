@@ -107,6 +107,130 @@ const Home = () => {
           <p className="text-gray-600">尝试调整搜索关键词或选择其他分类</p>
         </div>
       )}
+      
+      {/* 测试内容 - 用于验证回到顶部功能 */}
+      <div className="mt-12 space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>关于 Easy Tools</CardTitle>
+            <CardDescription>一个强大的开发者工具集合</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">
+              Easy Tools 是一个专为开发者设计的在线工具集合，提供了丰富的功能来提高您的工作效率。
+              无论您是前端开发者、后端开发者还是全栈开发者，这里都有适合您的工具。
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold mb-2">编码解码工具</h4>
+                <p className="text-sm text-gray-600">
+                  支持 Base64、URL、HTML、Unicode 等多种编码格式，还包括 MD5、SHA 等哈希算法。
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">代码工具</h4>
+                <p className="text-sm text-gray-600">
+                  JSON 格式化、代码美化、SQL 格式化等，让您的代码更加整洁易读。
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">文本处理</h4>
+                <p className="text-sm text-gray-600">
+                  文本格式化、Markdown 编辑器、正则表达式测试等实用功能。
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">转换工具</h4>
+                <p className="text-sm text-gray-600">
+                  单位转换、颜色转换、时间戳转换等，满足您的各种转换需求。
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>特色功能</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                  <h4 className="font-semibold">即时预览</h4>
+                  <p className="text-sm text-gray-600">所有工具都支持实时预览，输入即可看到结果。</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                  <h4 className="font-semibold">一键复制</h4>
+                  <p className="text-sm text-gray-600">支持一键复制结果到剪贴板，提高工作效率。</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                  <h4 className="font-semibold">响应式设计</h4>
+                  <p className="text-sm text-gray-600">完美适配桌面和移动设备，随时随地使用。</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                  <h4 className="font-semibold">数据安全</h4>
+                  <p className="text-sm text-gray-600">所有处理都在本地进行，不会上传您的数据。</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>使用指南</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">1. 选择工具</h4>
+                <p className="text-sm text-gray-600">从左侧导航栏中选择您需要的工具分类，然后点击具体的工具。</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">2. 输入数据</h4>
+                <p className="text-sm text-gray-600">在输入框中输入您要处理的数据，系统会实时显示处理结果。</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">3. 复制结果</h4>
+                <p className="text-sm text-gray-600">点击“复制”按钮将结果复制到剪贴板，然后在您的项目中使用。</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>常见问题</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">Q: 数据会被上传到服务器吗？</h4>
+                <p className="text-sm text-gray-600">A: 不会。所有的数据处理都在您的浏览器本地进行，保证数据安全。</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Q: 支持哪些浏览器？</h4>
+                <p className="text-sm text-gray-600">A: 支持所有现代浏览器，包括 Chrome、Firefox、Safari、Edge 等。</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Q: 可以离线使用吗？</h4>
+                <p className="text-sm text-gray-600">A: 大部分功能可以离线使用，但首次访问需要网络连接来加载资源。</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       </div>
     </>
   );
