@@ -473,7 +473,7 @@ const JsonViewer = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  JSON工具箱
+                  JSON格式化
                   {isValid !== null && (
                     isValid ? 
                       <CheckCircle className="w-5 h-5 text-green-500" /> : 
