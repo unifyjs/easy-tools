@@ -21,7 +21,11 @@ import {
   XCircle,
   Info,
   SortAsc,
-  Filter
+  Filter,
+  ChevronDown,
+  ChevronRight,
+  Expand,
+  Shrink
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -40,12 +44,13 @@ interface JsonStats {
 const JsonViewer = () => {
   const [inputText, setInputText] = useState('');
   const [parsedJson, setParsedJson] = useState<any>(null);
-  const [viewMode, setViewMode] = useState<'tree' | 'formatted' | 'compact'>('formatted');
+  const [viewMode, setViewMode] = useState<'tree' | 'formatted' | 'compact'>('tree');
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [stats, setStats] = useState<JsonStats | null>(null);
   const [sortKeys, setSortKeys] = useState(false);
   const [removeEmpty, setRemoveEmpty] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -421,40 +426,153 @@ const JsonViewer = () => {
     URL.revokeObjectURL(url);
   };
 
-  const renderJsonTree = (obj: any, level = 0): React.ReactNode => {
+  // 切换节点折叠状态
+  const toggleNodeCollapse = (path: string) => {
+    const newCollapsed = new Set(collapsedNodes);
+    if (newCollapsed.has(path)) {
+      newCollapsed.delete(path);
+    } else {
+      newCollapsed.add(path);
+    }
+    setCollapsedNodes(newCollapsed);
+  };
+
+  // 展开所有节点
+  const expandAll = () => {
+    setCollapsedNodes(new Set());
+  };
+
+  // 折叠所有节点
+  const collapseAll = () => {
+    const allPaths = new Set<string>();
+    const collectPaths = (obj: any, path = '') => {
+      if (Array.isArray(obj)) {
+        if (obj.length > 0) {
+          allPaths.add(path);
+        }
+        obj.forEach((item, index) => {
+          collectPaths(item, `${path}[${index}]`);
+        });
+      } else if (typeof obj === 'object' && obj !== null) {
+        const entries = Object.entries(obj);
+        if (entries.length > 0) {
+          allPaths.add(path);
+        }
+        entries.forEach(([key, value]) => {
+          collectPaths(value, path ? `${path}.${key}` : key);
+        });
+      }
+    };
+    if (parsedJson) {
+      collectPaths(parsedJson);
+    }
+    setCollapsedNodes(allPaths);
+  };
+
+  // 检查是否有子节点
+  const hasChildren = (obj: any): boolean => {
+    if (Array.isArray(obj)) {
+      return obj.length > 0;
+    }
+    if (typeof obj === 'object' && obj !== null) {
+      return Object.keys(obj).length > 0;
+    }
+    return false;
+  };
+
+  // 渲染带折叠功能的JSON树
+  const renderJsonTree = (obj: any, level = 0, path = ''): React.ReactNode => {
     if (obj === null) return <span className="text-gray-500">null</span>;
     if (typeof obj === 'string') return <span className="text-green-600">"{obj}"</span>;
     if (typeof obj === 'number') return <span className="text-blue-600">{obj}</span>;
     if (typeof obj === 'boolean') return <span className="text-purple-600">{obj.toString()}</span>;
 
     if (Array.isArray(obj)) {
+      const isCollapsed = collapsedNodes.has(path);
+      const hasChildNodes = obj.length > 0;
+      
       return (
-        <div className={`ml-${level * 4}`}>
-          <span className="text-gray-700">[</span>
-          {obj.map((item, index) => (
-            <div key={index} className="ml-4">
-              {renderJsonTree(item, level + 1)}
-              {index < obj.length - 1 && <span className="text-gray-700">,</span>}
+        <div className="relative">
+          <div className="flex items-center">
+            {hasChildNodes && (
+              <button
+                onClick={() => toggleNodeCollapse(path)}
+                className="mr-1 p-0.5 hover:bg-gray-200 rounded transition-colors"
+                title={isCollapsed ? '展开' : '折叠'}
+              >
+                {isCollapsed ? (
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-gray-600" />
+                )}
+              </button>
+            )}
+            <span className="text-gray-700">[</span>
+            {isCollapsed && hasChildNodes && (
+              <span className="text-gray-500 ml-1">...{obj.length} items</span>
+            )}
+            {!hasChildNodes && <span className="text-gray-700">]</span>}
+          </div>
+          {!isCollapsed && hasChildNodes && (
+            <div className="ml-4">
+              {obj.map((item, index) => (
+                <div key={index} className="flex items-start">
+                  <span className="text-gray-400 text-xs mr-2 mt-1 min-w-[20px]">{index}:</span>
+                  <div className="flex-1">
+                    {renderJsonTree(item, level + 1, `${path}[${index}]`)}
+                    {index < obj.length - 1 && <span className="text-gray-700">,</span>}
+                  </div>
+                </div>
+              ))}
+              <span className="text-gray-700">]</span>
             </div>
-          ))}
-          <span className="text-gray-700">]</span>
+          )}
         </div>
       );
     }
 
     if (typeof obj === 'object') {
+      const entries = Object.entries(obj);
+      const isCollapsed = collapsedNodes.has(path);
+      const hasChildNodes = entries.length > 0;
+      
       return (
-        <div className={`ml-${level * 4}`}>
-          <span className="text-gray-700">{'{'}</span>
-          {Object.entries(obj).map(([key, value], index, arr) => (
-            <div key={key} className="ml-4">
-              <span className="text-red-600">"{key}"</span>
-              <span className="text-gray-700">: </span>
-              {renderJsonTree(value, level + 1)}
-              {index < arr.length - 1 && <span className="text-gray-700">,</span>}
+        <div className="relative">
+          <div className="flex items-center">
+            {hasChildNodes && (
+              <button
+                onClick={() => toggleNodeCollapse(path)}
+                className="mr-1 p-0.5 hover:bg-gray-200 rounded transition-colors"
+                title={isCollapsed ? '展开' : '折叠'}
+              >
+                {isCollapsed ? (
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-gray-600" />
+                )}
+              </button>
+            )}
+            <span className="text-gray-700">{'{'}</span>
+            {isCollapsed && hasChildNodes && (
+              <span className="text-gray-500 ml-1">...{entries.length} properties</span>
+            )}
+            {!hasChildNodes && <span className="text-gray-700">{'}'}</span>}
+          </div>
+          {!isCollapsed && hasChildNodes && (
+            <div className="ml-4">
+              {entries.map(([key, value], index, arr) => (
+                <div key={key} className="flex items-start">
+                  <span className="text-red-600">"{key}"</span>
+                  <span className="text-gray-700 mx-1">:</span>
+                  <div className="flex-1">
+                    {renderJsonTree(value, level + 1, path ? `${path}.${key}` : key)}
+                    {index < arr.length - 1 && <span className="text-gray-700">,</span>}
+                  </div>
+                </div>
+              ))}
+              <span className="text-gray-700">{'}'}</span>
             </div>
-          ))}
-          <span className="text-gray-700">{'}'}</span>
+          )}
         </div>
       );
     }
@@ -743,15 +861,33 @@ const JsonViewer = () => {
 
                 <TabsContent value="tree" className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-semibold">树形视图</h3>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleCopy(formatJson(), '树形JSON')}
-                    >
-                      <Copy className="w-4 h-4 mr-2" />
-                      复制JSON
-                    </Button>
+                    <h3 className="text-lg font-semibold">树形视图（可折叠）</h3>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={expandAll}
+                      >
+                        <Expand className="w-4 h-4 mr-2" />
+                        全部展开
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={collapseAll}
+                      >
+                        <Shrink className="w-4 h-4 mr-2" />
+                        全部折叠
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleCopy(formatJson(), '树形JSON')}
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        复制JSON
+                      </Button>
+                    </div>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg min-h-[400px] overflow-auto font-mono text-sm border">
                     {renderJsonTree(parsedJson)}
